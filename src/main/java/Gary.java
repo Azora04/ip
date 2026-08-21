@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Gary {
@@ -16,8 +17,7 @@ public class Gary {
                 line + "\n");
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(line);
@@ -30,25 +30,25 @@ public class Gary {
 
             if (command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + "." + tasks[i]);
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + "." + tasks.get(i));
                 }
             } else if (command.equals("mark") || command.startsWith("mark ")) {
-                int taskNumber = getTaskNumber(command.substring(4).trim(), taskCount);
+                int taskNumber = getTaskNumber(command.substring(4).trim(), tasks.size());
                 if (taskNumber == -1) {
                     System.out.println("Error: The task number is invalid");
                 } else {
-                    Task task = tasks[taskNumber - 1];
+                    Task task = tasks.get(taskNumber - 1);
                     task.markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + task);
                 }
             } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                int taskNumber = getTaskNumber(command.substring(6).trim(), taskCount);
+                int taskNumber = getTaskNumber(command.substring(6).trim(), tasks.size());
                 if (taskNumber == -1) {
                     System.out.println("Error: The task number is invalid");
                 } else {
-                    Task task = tasks[taskNumber - 1];
+                    Task task = tasks.get(taskNumber - 1);
                     task.markAsNotDone();
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  " + task);
@@ -58,7 +58,7 @@ public class Gary {
                 if (description.isEmpty()) {
                     System.out.println("Error: The description of a todo cannot be empty");
                 } else {
-                    taskCount = addTask(tasks, taskCount, new Todo(description));
+                    addTask(tasks, new Todo(description));
                 }
             } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                 String taskDetails = command.substring(8).trim();
@@ -75,7 +75,7 @@ public class Gary {
                     } else if (by.isEmpty()) {
                         System.out.println("Error: The deadline time cannot be empty");
                     } else {
-                        taskCount = addTask(tasks, taskCount, new Deadline(description, by));
+                        addTask(tasks, new Deadline(description, by));
                     }
                 }
             } else if (command.equals("event") || command.startsWith("event ")) {
@@ -93,8 +93,18 @@ public class Gary {
                     if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                         System.out.println("Error: The event format is invalid");
                     } else {
-                        taskCount = addTask(tasks, taskCount, new Event(description, from, to));
+                        addTask(tasks, new Event(description, from, to));
                     }
+                }
+            } else if (command.equals("delete") || command.startsWith("delete ")) {
+                int taskNumber = getTaskNumber(command.substring(6).trim(), tasks.size());
+                if (taskNumber == -1) {
+                    System.out.println("Error: The task number is invalid");
+                } else {
+                    Task task = tasks.remove(taskNumber - 1);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("  " + task);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
             } else {
                 System.out.println("Invalid command");
@@ -103,12 +113,11 @@ public class Gary {
         }
     }
 
-    private static int addTask(Task[] tasks, int taskCount, Task task) {
-        tasks[taskCount] = task;
+    private static void addTask(ArrayList<Task> tasks, Task task) {
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + (taskCount + 1) + " tasks in the list.");
-        return taskCount + 1;
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
     private static int getTaskNumber(String numberText, int taskCount) {
