@@ -33,54 +33,90 @@ public class Gary {
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println((i + 1) + "." + tasks[i]);
                 }
-            } else if (command.startsWith("mark ")) {
-                int taskNumber = Integer.parseInt(command.substring(5));
-                Task task = tasks[taskNumber - 1];
-                task.markAsDone();
-                System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  " + task);
-            } else if (command.startsWith("unmark ")) {
-                int taskNumber = Integer.parseInt(command.substring(7));
-                Task task = tasks[taskNumber - 1];
-                task.markAsNotDone();
-                System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  " + task);
-            } else if (command.startsWith("todo ")) {
-                tasks[taskCount] = new Todo(command.substring(5));
-                taskCount++;
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.startsWith("deadline ")) {
-                String taskDetails = command.substring(9);
-                int byIndex = taskDetails.indexOf(" /by ");
-                String description = taskDetails.substring(0, byIndex);
-                String by = taskDetails.substring(byIndex + 5);
-                tasks[taskCount] = new Deadline(description, by);
-                taskCount++;
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
-            } else if (command.startsWith("event ")) {
-                String taskDetails = command.substring(6);
-                int fromIndex = taskDetails.indexOf(" /from ");
-                int toIndex = taskDetails.indexOf(" /to ");
-                String description = taskDetails.substring(0, fromIndex);
-                String from = taskDetails.substring(fromIndex + 7, toIndex);
-                String to = taskDetails.substring(toIndex + 5);
-                tasks[taskCount] = new Event(description, from, to);
-                taskCount++;
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
+            } else if (command.equals("mark") || command.startsWith("mark ")) {
+                int taskNumber = getTaskNumber(command.substring(4).trim(), taskCount);
+                if (taskNumber == -1) {
+                    System.out.println("Error: The task number is invalid");
+                } else {
+                    Task task = tasks[taskNumber - 1];
+                    task.markAsDone();
+                    System.out.println("Nice! I've marked this task as done:");
+                    System.out.println("  " + task);
+                }
+            } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+                int taskNumber = getTaskNumber(command.substring(6).trim(), taskCount);
+                if (taskNumber == -1) {
+                    System.out.println("Error: The task number is invalid");
+                } else {
+                    Task task = tasks[taskNumber - 1];
+                    task.markAsNotDone();
+                    System.out.println("OK, I've marked this task as not done yet:");
+                    System.out.println("  " + task);
+                }
+            } else if (command.equals("todo") || command.startsWith("todo ")) {
+                String description = command.substring(4).trim();
+                if (description.isEmpty()) {
+                    System.out.println("Error: The description of a todo cannot be empty");
+                } else {
+                    taskCount = addTask(tasks, taskCount, new Todo(description));
+                }
+            } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                String taskDetails = command.substring(8).trim();
+                int byIndex = taskDetails.indexOf("/by");
+                if (taskDetails.isEmpty()) {
+                    System.out.println("Error: The description of a deadline cannot be empty");
+                } else if (byIndex == -1) {
+                    System.out.println("Error: The deadline format is invalid");
+                } else {
+                    String description = taskDetails.substring(0, byIndex).trim();
+                    String by = taskDetails.substring(byIndex + 3).trim();
+                    if (description.isEmpty()) {
+                        System.out.println("Error: The description of a deadline cannot be empty");
+                    } else if (by.isEmpty()) {
+                        System.out.println("Error: The deadline time cannot be empty");
+                    } else {
+                        taskCount = addTask(tasks, taskCount, new Deadline(description, by));
+                    }
+                }
+            } else if (command.equals("event") || command.startsWith("event ")) {
+                String taskDetails = command.substring(5).trim();
+                int fromIndex = taskDetails.indexOf("/from");
+                int toIndex = taskDetails.indexOf("/to");
+                if (taskDetails.isEmpty()) {
+                    System.out.println("Error: The description of an event cannot be empty");
+                } else if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
+                    System.out.println("Error: The event format is invalid");
+                } else {
+                    String description = taskDetails.substring(0, fromIndex).trim();
+                    String from = taskDetails.substring(fromIndex + 5, toIndex).trim();
+                    String to = taskDetails.substring(toIndex + 3).trim();
+                    if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                        System.out.println("Error: The event format is invalid");
+                    } else {
+                        taskCount = addTask(tasks, taskCount, new Event(description, from, to));
+                    }
+                }
             } else {
-                tasks[taskCount] = new Todo(command);
-                taskCount++;
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println("Invalid command");
             }
             System.out.println(line);
+        }
+    }
+
+    private static int addTask(Task[] tasks, int taskCount, Task task) {
+        tasks[taskCount] = task;
+        System.out.println("Got it. I've added this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + (taskCount + 1) + " tasks in the list.");
+        return taskCount + 1;
+    }
+
+    private static int getTaskNumber(String numberText, int taskCount) {
+        try {
+            int taskNumber = Integer.parseInt(numberText);
+            return taskNumber >= 1 && taskNumber <= taskCount ? taskNumber : -1;
+        } catch (NumberFormatException e) {
+            return -1;
         }
     }
 }
