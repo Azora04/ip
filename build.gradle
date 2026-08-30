@@ -37,7 +37,7 @@ test {
 }
 
 application {
-    mainClass = 'Gary'
+    mainClass = 'gary.Gary'
 }
 
 jar {

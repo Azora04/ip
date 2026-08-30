@@ -1,7 +1,12 @@
+package gary.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * Represents a task that takes place between two dates.
+ */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMAT =
             DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
@@ -9,6 +14,13 @@ public class Event extends Task {
     protected LocalDate from;
     protected LocalDate to;
 
+    /**
+     * Creates an incomplete event.
+     *
+     * @param description Description of the task.
+     * @param from Date on which the event starts.
+     * @param to Date on which the event ends.
+     */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
