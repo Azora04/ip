@@ -1,5 +1,7 @@
 package gary.task;
 
+import java.util.Locale;
+
 /**
  * Represents a task with a description and completion status.
  */
@@ -58,6 +60,16 @@ public class Task {
      */
     public void markAsNotDone() {
         isDone = false;
+    }
+
+    /**
+     * Returns whether the task description contains the keyword, ignoring case.
+     *
+     * @param keyword Keyword to find in the description.
+     * @return {@code true} if the description contains the keyword.
+     */
+    public boolean containsKeyword(String keyword) {
+        return description.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     /**

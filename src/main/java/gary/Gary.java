@@ -59,6 +59,19 @@ public class Gary {
                 for (int i = 0; i < tasks.size(); i++) {
                     System.out.println((i + 1) + "." + tasks.get(i));
                 }
+            } else if (commandType == CommandType.FIND) {
+                String keyword = command.substring(4).trim();
+                if (keyword.isEmpty()) {
+                    System.out.println("Error: The keyword for a find cannot be empty");
+                } else {
+                    System.out.println("Here are the matching tasks in your list:");
+                    for (int i = 0; i < tasks.size(); i++) {
+                        Task task = tasks.get(i);
+                        if (task.containsKeyword(keyword)) {
+                            System.out.println((i + 1) + "." + task);
+                        }
+                    }
+                }
             } else if (commandType == CommandType.MARK) {
                 int taskNumber = getTaskNumber(command.substring(4).trim(), tasks.size());
                 if (taskNumber == -1) {
