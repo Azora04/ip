@@ -28,6 +28,16 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Required JUnit coverage workflow
+
+After every Java code change:
+
+1. Review and update the JUnit tests in `src/test/java`.
+2. Maintain tests for approximately the top 50% highest-value methods, prioritizing complex, core, and critical business logic.
+3. Run `gradlew test` and resolve all failures before handing the change back.
+
+Test classes must mirror the package and name of the production class they test. Test methods may use the `featureUnderTest_testScenario_expectedBehavior` naming convention when descriptive names would otherwise be too long.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
