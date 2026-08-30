@@ -1,4 +1,4 @@
-package gary;
+package gary.ui;
 
 import java.util.Scanner;
 

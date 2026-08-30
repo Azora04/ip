@@ -1,4 +1,4 @@
-package gary;
+package gary.storage;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +8,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import gary.task.Deadline;
+import gary.task.Event;
+import gary.task.Task;
+import gary.task.Todo;
 
 /**
  * Loads and saves tasks using a text file.

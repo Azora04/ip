@@ -1,4 +1,4 @@
-package gary;
+package gary.command;
 
 /**
  * Identifies the commands supported by Gary.

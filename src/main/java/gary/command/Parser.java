@@ -1,7 +1,12 @@
-package gary;
+package gary.command;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import gary.task.Deadline;
+import gary.task.Event;
+import gary.task.Task;
+import gary.task.Todo;
 
 /**
  * Parses user input into commands and command arguments.

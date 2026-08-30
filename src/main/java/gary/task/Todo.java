@@ -1,4 +1,4 @@
-package gary;
+package gary.task;
 
 /**
  * Represents a task without an attached date.

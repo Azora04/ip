@@ -3,6 +3,13 @@ package gary;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import gary.command.CommandType;
+import gary.command.Parser;
+import gary.storage.Storage;
+import gary.task.Task;
+import gary.task.TaskList;
+import gary.ui.Ui;
+
 /**
  * Runs the Gary chatbot command-line interface.
  */
