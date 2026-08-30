@@ -5,7 +5,18 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Runs the Gary task manager as a command-line application.
+ */
 public class Gary {
+    private Gary() {
+    }
+
+    /**
+     * Starts an interactive Gary session.
+     *
+     * @param args Command-line arguments, which are not used.
+     */
     public static void main(String[] args) {
         String banner = "██████╗   █████╗ ██████╗ ██╗   ██╗\n"
                 + "██╔════╝ ██╔══██╗██╔══██╗╚██╗ ██╔╝\n"
@@ -131,6 +142,9 @@ public class Gary {
         }
     }
 
+    /**
+     * Adds a task, saves the updated list, and displays a confirmation.
+     */
     private static void addTask(ArrayList<Task> tasks, Task task, Storage storage) {
         tasks.add(task);
         saveTasks(storage, tasks);
@@ -139,6 +153,11 @@ public class Gary {
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
+    /**
+     * Returns a validated one-based task number.
+     *
+     * @return Task number, or {@code -1} if the input is not a valid task number.
+     */
     private static int getTaskNumber(String numberText, int taskCount) {
         try {
             int taskNumber = Integer.parseInt(numberText);
@@ -148,6 +167,9 @@ public class Gary {
         }
     }
 
+    /**
+     * Loads saved tasks and recovers with an empty list if loading fails.
+     */
     private static ArrayList<Task> loadTasks(Storage storage) {
         try {
             return storage.loadTasks();
@@ -157,6 +179,9 @@ public class Gary {
         }
     }
 
+    /**
+     * Saves all tasks and reports any storage error to the user.
+     */
     private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
         try {
             storage.saveTasks(tasks);
