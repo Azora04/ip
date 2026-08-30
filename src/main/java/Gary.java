@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -81,7 +83,11 @@ public class Gary {
                     } else if (by.isEmpty()) {
                         System.out.println("Error: The deadline time cannot be empty");
                     } else {
-                        addTask(tasks, new Deadline(description, by), storage);
+                        try {
+                            addTask(tasks, new Deadline(description, LocalDate.parse(by)), storage);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Error: The deadline date must be in yyyy-MM-dd format");
+                        }
                     }
                 }
             } else if (commandType == CommandType.EVENT) {
@@ -99,7 +105,12 @@ public class Gary {
                     if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                         System.out.println("Error: The event format is invalid");
                     } else {
-                        addTask(tasks, new Event(description, from, to), storage);
+                        try {
+                            addTask(tasks, new Event(description, LocalDate.parse(from),
+                                    LocalDate.parse(to)), storage);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Error: The event dates must be in yyyy-MM-dd format");
+                        }
                     }
                 }
             } else if (commandType == CommandType.DELETE) {
