@@ -20,20 +20,21 @@ public class Gary {
         ArrayList<Task> tasks = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
+            CommandType commandType = CommandType.from(command);
             System.out.println(line);
 
-            if (command.equals("bye")) {
+            if (commandType == CommandType.BYE && command.equals("bye")) {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(line);
                 break;
             }
 
-            if (command.equals("list")) {
+            if (commandType == CommandType.LIST && command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < tasks.size(); i++) {
                     System.out.println((i + 1) + "." + tasks.get(i));
                 }
-            } else if (command.equals("mark") || command.startsWith("mark ")) {
+            } else if (commandType == CommandType.MARK) {
                 int taskNumber = getTaskNumber(command.substring(4).trim(), tasks.size());
                 if (taskNumber == -1) {
                     System.out.println("Error: The task number is invalid");
@@ -43,7 +44,7 @@ public class Gary {
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + task);
                 }
-            } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+            } else if (commandType == CommandType.UNMARK) {
                 int taskNumber = getTaskNumber(command.substring(6).trim(), tasks.size());
                 if (taskNumber == -1) {
                     System.out.println("Error: The task number is invalid");
@@ -53,14 +54,14 @@ public class Gary {
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  " + task);
                 }
-            } else if (command.equals("todo") || command.startsWith("todo ")) {
+            } else if (commandType == CommandType.TODO) {
                 String description = command.substring(4).trim();
                 if (description.isEmpty()) {
                     System.out.println("Error: The description of a todo cannot be empty");
                 } else {
                     addTask(tasks, new Todo(description));
                 }
-            } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+            } else if (commandType == CommandType.DEADLINE) {
                 String taskDetails = command.substring(8).trim();
                 int byIndex = taskDetails.indexOf("/by");
                 if (taskDetails.isEmpty()) {
@@ -78,7 +79,7 @@ public class Gary {
                         addTask(tasks, new Deadline(description, by));
                     }
                 }
-            } else if (command.equals("event") || command.startsWith("event ")) {
+            } else if (commandType == CommandType.EVENT) {
                 String taskDetails = command.substring(5).trim();
                 int fromIndex = taskDetails.indexOf("/from");
                 int toIndex = taskDetails.indexOf("/to");
@@ -96,7 +97,7 @@ public class Gary {
                         addTask(tasks, new Event(description, from, to));
                     }
                 }
-            } else if (command.equals("delete") || command.startsWith("delete ")) {
+            } else if (commandType == CommandType.DELETE) {
                 int taskNumber = getTaskNumber(command.substring(6).trim(), tasks.size());
                 if (taskNumber == -1) {
                     System.out.println("Error: The task number is invalid");
