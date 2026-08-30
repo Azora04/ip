@@ -1,0 +1,87 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Storage {
+    private final Path filePath;
+
+    public Storage(Path filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> loadTasks() throws IOException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        if (!Files.exists(filePath)) {
+            return tasks;
+        }
+
+        for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
+            Task task = parseTask(line);
+            if (task != null) {
+                tasks.add(task);
+            }
+        }
+        return tasks;
+    }
+
+    public void saveTasks(List<Task> tasks) throws IOException {
+        Path parent = filePath.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        ArrayList<String> lines = new ArrayList<>();
+        for (Task task : tasks) {
+            lines.add(formatTask(task));
+        }
+        Files.write(filePath, lines, StandardCharsets.UTF_8);
+    }
+
+    private Task parseTask(String line) {
+        String[] fields = line.split(" \\| ", -1);
+        if (fields.length < 3 || !(fields[1].equals("0") || fields[1].equals("1"))) {
+            return null;
+        }
+
+        Task task;
+        switch (fields[0]) {
+        case "T":
+            task = fields.length == 3 && !fields[2].isBlank() ? new Todo(fields[2]) : null;
+            break;
+        case "D":
+            task = fields.length == 4 && !fields[2].isBlank() && !fields[3].isBlank()
+                    ? new Deadline(fields[2], fields[3]) : null;
+            break;
+        case "E":
+            task = fields.length == 5 && !fields[2].isBlank()
+                    && !fields[3].isBlank() && !fields[4].isBlank()
+                    ? new Event(fields[2], fields[3], fields[4]) : null;
+            break;
+        default:
+            task = null;
+        }
+
+        if (task != null && fields[1].equals("1")) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    private String formatTask(Task task) {
+        String status = task.isDone() ? "1" : "0";
+        if (task instanceof Todo) {
+            return "T | " + status + " | " + task.getDescription();
+        }
+        if (task instanceof Deadline deadline) {
+            return "D | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
+        }
+        if (task instanceof Event event) {
+            return "E | " + status + " | " + task.getDescription() + " | "
+                    + event.getFrom() + " | " + event.getTo();
+        }
+        throw new IllegalArgumentException("Unsupported task type: " + task.getClass().getName());
+    }
+}

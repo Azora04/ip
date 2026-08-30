@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +19,8 @@ public class Gary {
                 line + "\n");
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage(Path.of("data", "gary.txt"));
+        ArrayList<Task> tasks = loadTasks(storage);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             CommandType commandType = CommandType.from(command);
@@ -41,6 +44,7 @@ public class Gary {
                 } else {
                     Task task = tasks.get(taskNumber - 1);
                     task.markAsDone();
+                    saveTasks(storage, tasks);
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + task);
                 }
@@ -51,6 +55,7 @@ public class Gary {
                 } else {
                     Task task = tasks.get(taskNumber - 1);
                     task.markAsNotDone();
+                    saveTasks(storage, tasks);
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  " + task);
                 }
@@ -59,7 +64,7 @@ public class Gary {
                 if (description.isEmpty()) {
                     System.out.println("Error: The description of a todo cannot be empty");
                 } else {
-                    addTask(tasks, new Todo(description));
+                    addTask(tasks, new Todo(description), storage);
                 }
             } else if (commandType == CommandType.DEADLINE) {
                 String taskDetails = command.substring(8).trim();
@@ -76,7 +81,7 @@ public class Gary {
                     } else if (by.isEmpty()) {
                         System.out.println("Error: The deadline time cannot be empty");
                     } else {
-                        addTask(tasks, new Deadline(description, by));
+                        addTask(tasks, new Deadline(description, by), storage);
                     }
                 }
             } else if (commandType == CommandType.EVENT) {
@@ -94,7 +99,7 @@ public class Gary {
                     if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                         System.out.println("Error: The event format is invalid");
                     } else {
-                        addTask(tasks, new Event(description, from, to));
+                        addTask(tasks, new Event(description, from, to), storage);
                     }
                 }
             } else if (commandType == CommandType.DELETE) {
@@ -103,6 +108,7 @@ public class Gary {
                     System.out.println("Error: The task number is invalid");
                 } else {
                     Task task = tasks.remove(taskNumber - 1);
+                    saveTasks(storage, tasks);
                     System.out.println("Noted. I've removed this task:");
                     System.out.println("  " + task);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -114,8 +120,9 @@ public class Gary {
         }
     }
 
-    private static void addTask(ArrayList<Task> tasks, Task task) {
+    private static void addTask(ArrayList<Task> tasks, Task task, Storage storage) {
         tasks.add(task);
+        saveTasks(storage, tasks);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -127,6 +134,23 @@ public class Gary {
             return taskNumber >= 1 && taskNumber <= taskCount ? taskNumber : -1;
         } catch (NumberFormatException e) {
             return -1;
+        }
+    }
+
+    private static ArrayList<Task> loadTasks(Storage storage) {
+        try {
+            return storage.loadTasks();
+        } catch (IOException e) {
+            System.out.println("Error: Unable to load tasks");
+            return new ArrayList<>();
+        }
+    }
+
+    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+        try {
+            storage.saveTasks(tasks);
+        } catch (IOException e) {
+            System.out.println("Error: Unable to save tasks");
         }
     }
 }
