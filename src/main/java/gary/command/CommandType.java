@@ -1,3 +1,5 @@
+package gary.command;
+
 /**
  * Represents a command recognized by Gary.
  */
