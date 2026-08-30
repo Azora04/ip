@@ -1,3 +1,5 @@
+package gary;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -5,7 +7,15 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Runs the Gary chatbot command-line interface.
+ */
 public class Gary {
+    /**
+     * Starts the chatbot and processes commands until the user exits.
+     *
+     * @param args Command-line arguments, which are not used.
+     */
     public static void main(String[] args) {
         String banner = "██████╗   █████╗ ██████╗ ██╗   ██╗\n"
                 + "██╔════╝ ██╔══██╗██╔══██╗╚██╗ ██╔╝\n"
@@ -14,11 +24,11 @@ public class Gary {
                 + "╚██████╔╝██║  ██║██║  ██║   ██║   \n"
                 + " ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   \n";
         String line = "____________________________________________________________\n";
-        System.out.println(line + "\n" +
-                banner + "\n" +
-                "Hello! I'm Gary.\n" +
-                "What can I do for you?\n" +
-                line + "\n");
+        System.out.println(line + "\n"
+                + banner + "\n"
+                + "Hello! I'm Gary.\n"
+                + "What can I do for you?\n"
+                + line + "\n");
 
         Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage(Path.of("data", "gary.txt"));

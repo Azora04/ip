@@ -1,4 +1,14 @@
+package gary;
+
+/**
+ * Represents a task without an attached date.
+ */
 public class Todo extends Task {
+    /**
+     * Creates a todo with the given description.
+     *
+     * @param description Description of the todo.
+     */
     public Todo(String description) {
         super(description);
     }

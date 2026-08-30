@@ -33,3 +33,20 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+
+## Required UI regression workflow
+
+After every code update:
+
+1. Review `test/ui-test-plan.md` and update it when the intended behavior changes or a relevant test case is missing. Derive expected output from the requirement, not from failing program output.
+2. Invoke the project-specific `test-ui` skill in `.agents/skills/test-ui/SKILL.md` before handing the change back to the user.
+
+If a UI test fails, stop at the first failure and report its console transcript, actual output, and expected output.
+
+## Required Java coding standard
+
+Before creating, changing, or reviewing Java code, read and follow `.agents/skills/seedu-java-coding-standard/SKILL.md`. Apply it to all Java code in this project.
+
+## Required Git standard
+
+Before proposing or creating a commit message or branch, read and follow `.agents/skills/seedu-git-standard/SKILL.md`. Apply it to all future commits and branch names in this project.

@@ -1,3 +1,8 @@
+package gary;
+
+/**
+ * Identifies the commands supported by Gary.
+ */
 public enum CommandType {
     BYE("bye"),
     LIST("list"),
@@ -15,6 +20,12 @@ public enum CommandType {
         this.keyword = keyword;
     }
 
+    /**
+     * Returns the command type identified by the first word of the input.
+     *
+     * @param input User input to classify.
+     * @return Matching command type, or {@link #UNKNOWN} when none matches.
+     */
     public static CommandType from(String input) {
         int separatorIndex = input.indexOf(' ');
         String keyword = separatorIndex == -1 ? input : input.substring(0, separatorIndex);
