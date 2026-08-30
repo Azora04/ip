@@ -7,6 +7,7 @@ public enum CommandType {
     DEADLINE("deadline"),
     EVENT("event"),
     DELETE("delete"),
+    FIND("find"),
     UNKNOWN("");
 
     private final String keyword;

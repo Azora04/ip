@@ -44,4 +44,16 @@ class TaskTest {
                 () -> assertEquals("[ ] read book", task.toString())
         );
     }
+
+    @Test
+    void containsKeyword_variedKeywords_returnsMatchingResult() {
+        Task task = new Task("Read Book");
+
+        assertAll(
+                () -> assertTrue(task.containsKeyword("book")),
+                () -> assertTrue(task.containsKeyword("READ")),
+                () -> assertTrue(task.containsKeyword("ad bo")),
+                () -> assertFalse(task.containsKeyword("return"))
+        );
+    }
 }

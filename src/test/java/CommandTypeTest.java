@@ -16,7 +16,8 @@ class CommandTypeTest {
                         CommandType.from("deadline return book /by 2019-12-02")),
                 () -> assertEquals(CommandType.EVENT,
                         CommandType.from("event meeting /from 2019-12-02 /to 2019-12-03")),
-                () -> assertEquals(CommandType.DELETE, CommandType.from("delete 1"))
+                () -> assertEquals(CommandType.DELETE, CommandType.from("delete 1")),
+                () -> assertEquals(CommandType.FIND, CommandType.from("find book"))
         );
     }
 
