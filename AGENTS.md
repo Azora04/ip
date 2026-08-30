@@ -47,6 +47,10 @@ Test classes must mirror the package and name of the production class they test.
 
 ## Git
 
+Before proposing or creating any branch, commit, merge commit, or tag, invoke the
+project-specific `seedu-git-standard` skill and follow its conventions. Explicit
+names or messages supplied by the user take precedence.
+
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
