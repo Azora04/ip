@@ -7,13 +7,27 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Loads tasks from and saves tasks to a text file.
+ */
 public class Storage {
     private final Path filePath;
 
+    /**
+     * Creates a storage manager for the specified data file.
+     *
+     * @param filePath Path of the task data file.
+     */
     public Storage(Path filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads valid task records from the data file.
+     *
+     * @return Tasks represented by valid records, or an empty list if the file does not exist.
+     * @throws IOException If the data file cannot be read.
+     */
     public ArrayList<Task> loadTasks() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
@@ -29,6 +43,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the tasks, creating the data directory when needed.
+     *
+     * @param tasks Tasks to save.
+     * @throws IOException If the tasks cannot be written.
+     */
     public void saveTasks(List<Task> tasks) throws IOException {
         Path parent = filePath.getParent();
         if (parent != null) {
@@ -42,6 +62,11 @@ public class Storage {
         Files.write(filePath, lines, StandardCharsets.UTF_8);
     }
 
+    /**
+     * Returns the task represented by a storage record.
+     *
+     * @return Parsed task, or {@code null} if the record is invalid.
+     */
     private Task parseTask(String line) {
         String[] fields = line.split(" \\| ", -1);
         if (fields.length < 3 || !(fields[1].equals("0") || fields[1].equals("1"))) {
@@ -77,6 +102,11 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Returns the storage record for a supported task.
+     *
+     * @throws IllegalArgumentException If the task type is unsupported.
+     */
     private String formatTask(Task task) {
         String status = task.isDone() ? "1" : "0";
         if (task instanceof Todo) {
