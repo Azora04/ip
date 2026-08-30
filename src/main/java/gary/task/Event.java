@@ -12,9 +12,9 @@ public class Event extends Task {
             DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
 
     /** Date on which the event starts. */
-    protected LocalDate from;
+    private LocalDate from;
     /** Date on which the event ends. */
-    protected LocalDate to;
+    private LocalDate to;
 
     /**
      * Creates an incomplete event.

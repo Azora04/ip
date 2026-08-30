@@ -2,213 +2,180 @@ package gary;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 import gary.command.CommandType;
+import gary.command.Parser;
 import gary.storage.Storage;
-import gary.task.Deadline;
-import gary.task.Event;
 import gary.task.Task;
-import gary.task.Todo;
+import gary.task.TaskList;
+import gary.ui.Ui;
 
 /**
- * Runs the Gary task manager as a command-line application.
+ * Runs the Gary chatbot command-line interface.
  */
 public class Gary {
-    private Gary() {
+    private final Parser parser;
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
+
+    /**
+     * Creates a chatbot that persists tasks at the given path.
+     *
+     * @param filePath Path of the task data file.
+     */
+    public Gary(Path filePath) {
+        parser = new Parser();
+        storage = new Storage(filePath);
+        ui = new Ui();
+        tasks = loadTasks();
     }
 
     /**
-     * Starts an interactive Gary session.
+     * Runs the chatbot until the user exits or closes the input stream.
+     */
+    public void run() {
+        ui.showWelcome();
+        while (ui.hasNextCommand()) {
+            String command = ui.readCommand();
+            CommandType commandType = parser.parseCommandType(command);
+            ui.showDivider();
+
+            if (commandType == CommandType.BYE) {
+                ui.showMessage("Bye. Hope to see you again soon!");
+                ui.showDivider();
+                break;
+            }
+
+            handleCommand(command, commandType);
+            ui.showDivider();
+        }
+    }
+
+    /**
+     * Starts the chatbot and processes commands until the user exits.
      *
      * @param args Command-line arguments, which are not used.
      */
     public static void main(String[] args) {
-        String banner = "██████╗   █████╗ ██████╗ ██╗   ██╗\n"
-                + "██╔════╝ ██╔══██╗██╔══██╗╚██╗ ██╔╝\n"
-                + "██║  ███╗███████║██████╔╝ ╚████╔╝ \n"
-                + "██║   ██║██╔══██║██╔══██╗  ╚██╔╝  \n"
-                + "╚██████╔╝██║  ██║██║  ██║   ██║   \n"
-                + " ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   \n";
-        String line = "____________________________________________________________\n";
-        System.out.println(line + "\n"
-                + banner + "\n"
-                + "Hello! I'm Gary.\n"
-                + "What can I do for you?\n"
-                + line + "\n");
+        new Gary(Path.of("data", "gary.txt")).run();
+    }
 
-        Scanner scanner = new Scanner(System.in);
-        Storage storage = new Storage(Path.of("data", "gary.txt"));
-        ArrayList<Task> tasks = loadTasks(storage);
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
-            CommandType commandType = CommandType.from(command);
-            System.out.println(line);
-
-            if (commandType == CommandType.BYE && command.equals("bye")) {
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println(line);
-                break;
-            }
-
-            if (commandType == CommandType.LIST && command.equals("list")) {
-                System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println((i + 1) + "." + tasks.get(i));
-                }
-            } else if (commandType == CommandType.FIND) {
-                String keyword = command.substring(4).trim();
-                if (keyword.isEmpty()) {
-                    System.out.println("Error: The keyword for a find cannot be empty");
-                } else {
-                    System.out.println("Here are the matching tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        Task task = tasks.get(i);
-                        if (task.containsKeyword(keyword)) {
-                            System.out.println((i + 1) + "." + task);
-                        }
-                    }
-                }
-            } else if (commandType == CommandType.MARK) {
-                int taskNumber = getTaskNumber(command.substring(4).trim(), tasks.size());
-                if (taskNumber == -1) {
-                    System.out.println("Error: The task number is invalid");
-                } else {
-                    Task task = tasks.get(taskNumber - 1);
-                    task.markAsDone();
-                    saveTasks(storage, tasks);
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  " + task);
-                }
-            } else if (commandType == CommandType.UNMARK) {
-                int taskNumber = getTaskNumber(command.substring(6).trim(), tasks.size());
-                if (taskNumber == -1) {
-                    System.out.println("Error: The task number is invalid");
-                } else {
-                    Task task = tasks.get(taskNumber - 1);
-                    task.markAsNotDone();
-                    saveTasks(storage, tasks);
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println("  " + task);
-                }
-            } else if (commandType == CommandType.TODO) {
-                String description = command.substring(4).trim();
-                if (description.isEmpty()) {
-                    System.out.println("Error: The description of a todo cannot be empty");
-                } else {
-                    addTask(tasks, new Todo(description), storage);
-                }
-            } else if (commandType == CommandType.DEADLINE) {
-                String taskDetails = command.substring(8).trim();
-                int byIndex = taskDetails.indexOf("/by");
-                if (taskDetails.isEmpty()) {
-                    System.out.println("Error: The description of a deadline cannot be empty");
-                } else if (byIndex == -1) {
-                    System.out.println("Error: The deadline format is invalid");
-                } else {
-                    String description = taskDetails.substring(0, byIndex).trim();
-                    String by = taskDetails.substring(byIndex + 3).trim();
-                    if (description.isEmpty()) {
-                        System.out.println("Error: The description of a deadline cannot be empty");
-                    } else if (by.isEmpty()) {
-                        System.out.println("Error: The deadline time cannot be empty");
-                    } else {
-                        try {
-                            addTask(tasks, new Deadline(description, LocalDate.parse(by)), storage);
-                        } catch (DateTimeParseException e) {
-                            System.out.println("Error: The deadline date must be in yyyy-MM-dd format");
-                        }
-                    }
-                }
-            } else if (commandType == CommandType.EVENT) {
-                String taskDetails = command.substring(5).trim();
-                int fromIndex = taskDetails.indexOf("/from");
-                int toIndex = taskDetails.indexOf("/to");
-                if (taskDetails.isEmpty()) {
-                    System.out.println("Error: The description of an event cannot be empty");
-                } else if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-                    System.out.println("Error: The event format is invalid");
-                } else {
-                    String description = taskDetails.substring(0, fromIndex).trim();
-                    String from = taskDetails.substring(fromIndex + 5, toIndex).trim();
-                    String to = taskDetails.substring(toIndex + 3).trim();
-                    if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        System.out.println("Error: The event format is invalid");
-                    } else {
-                        try {
-                            addTask(tasks, new Event(description, LocalDate.parse(from),
-                                    LocalDate.parse(to)), storage);
-                        } catch (DateTimeParseException e) {
-                            System.out.println("Error: The event dates must be in yyyy-MM-dd format");
-                        }
-                    }
-                }
-            } else if (commandType == CommandType.DELETE) {
-                int taskNumber = getTaskNumber(command.substring(6).trim(), tasks.size());
-                if (taskNumber == -1) {
-                    System.out.println("Error: The task number is invalid");
-                } else {
-                    Task task = tasks.remove(taskNumber - 1);
-                    saveTasks(storage, tasks);
-                    System.out.println("Noted. I've removed this task:");
-                    System.out.println("  " + task);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-                }
-            } else {
-                System.out.println("Invalid command");
-            }
-            System.out.println(line);
+    private void handleCommand(String command, CommandType commandType) {
+        if (commandType == CommandType.LIST) {
+            showTaskList();
+        } else if (commandType == CommandType.MARK) {
+            markTask(command);
+        } else if (commandType == CommandType.UNMARK) {
+            unmarkTask(command);
+        } else if (commandType == CommandType.TODO
+                || commandType == CommandType.DEADLINE
+                || commandType == CommandType.EVENT) {
+            addTask(command, commandType);
+        } else if (commandType == CommandType.DELETE) {
+            deleteTask(command);
+        } else if (commandType == CommandType.FIND) {
+            findTasks(command);
+        } else {
+            ui.showMessage("Invalid command");
         }
     }
 
-    /**
-     * Adds a task, saves the updated list, and displays a confirmation.
-     */
-    private static void addTask(ArrayList<Task> tasks, Task task, Storage storage) {
+    private void showTaskList() {
+        ui.showMessage("Here are the tasks in your list:");
+        for (int i = 1; i <= tasks.size(); i++) {
+            ui.showMessage(i + "." + tasks.getTask(i));
+        }
+    }
+
+    private void markTask(String command) {
+        int taskNumber = parser.parseTaskNumber(command, tasks.size());
+        if (taskNumber == -1) {
+            ui.showMessage("Error: The task number is invalid");
+            return;
+        }
+
+        Task task = tasks.markAsDone(taskNumber);
+        saveTasks();
+        ui.showMessage("Nice! I've marked this task as done:");
+        ui.showMessage("  " + task);
+    }
+
+    private void unmarkTask(String command) {
+        int taskNumber = parser.parseTaskNumber(command, tasks.size());
+        if (taskNumber == -1) {
+            ui.showMessage("Error: The task number is invalid");
+            return;
+        }
+
+        Task task = tasks.markAsNotDone(taskNumber);
+        saveTasks();
+        ui.showMessage("OK, I've marked this task as not done yet:");
+        ui.showMessage("  " + task);
+    }
+
+    private void addTask(String command, CommandType commandType) {
+        try {
+            addTask(parser.parseTask(command, commandType));
+        } catch (IllegalArgumentException e) {
+            ui.showMessage(e.getMessage());
+        }
+    }
+
+    private void addTask(Task task) {
         tasks.add(task);
-        saveTasks(storage, tasks);
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        saveTasks();
+        ui.showMessage("Got it. I've added this task:");
+        ui.showMessage("  " + task);
+        ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    /**
-     * Returns a validated one-based task number.
-     *
-     * @return Task number, or {@code -1} if the input is not a valid task number.
-     */
-    private static int getTaskNumber(String numberText, int taskCount) {
+    private void deleteTask(String command) {
+        int taskNumber = parser.parseTaskNumber(command, tasks.size());
+        if (taskNumber == -1) {
+            ui.showMessage("Error: The task number is invalid");
+            return;
+        }
+
+        Task task = tasks.delete(taskNumber);
+        saveTasks();
+        ui.showMessage("Noted. I've removed this task:");
+        ui.showMessage("  " + task);
+        ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    private void findTasks(String command) {
+        String keyword;
         try {
-            int taskNumber = Integer.parseInt(numberText);
-            return taskNumber >= 1 && taskNumber <= taskCount ? taskNumber : -1;
-        } catch (NumberFormatException e) {
-            return -1;
+            keyword = parser.parseKeyword(command);
+        } catch (IllegalArgumentException e) {
+            ui.showMessage(e.getMessage());
+            return;
+        }
+
+        ui.showMessage("Here are the matching tasks in your list:");
+        for (int i = 1; i <= tasks.size(); i++) {
+            Task task = tasks.getTask(i);
+            if (task.containsKeyword(keyword)) {
+                ui.showMessage(i + "." + task);
+            }
         }
     }
 
-    /**
-     * Loads saved tasks and recovers with an empty list if loading fails.
-     */
-    private static ArrayList<Task> loadTasks(Storage storage) {
+    private TaskList loadTasks() {
         try {
-            return storage.loadTasks();
+            return new TaskList(storage.loadTasks());
         } catch (IOException e) {
-            System.out.println("Error: Unable to load tasks");
-            return new ArrayList<>();
+            ui.showMessage("Error: Unable to load tasks");
+            return new TaskList();
         }
     }
 
-    /**
-     * Saves all tasks and reports any storage error to the user.
-     */
-    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+    private void saveTasks() {
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.getTasks());
         } catch (IOException e) {
-            System.out.println("Error: Unable to save tasks");
+            ui.showMessage("Error: Unable to save tasks");
         }
     }
 }

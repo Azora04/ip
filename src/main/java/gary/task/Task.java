@@ -7,9 +7,9 @@ import java.util.Locale;
  */
 public class Task {
     /** Description of the task. */
-    protected String description;
+    private String description;
     /** Whether the task is complete. */
-    protected boolean isDone;
+    private boolean isDone;
 
     /**
      * Creates an incomplete task.
