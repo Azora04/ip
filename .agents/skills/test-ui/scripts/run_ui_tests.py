@@ -179,7 +179,11 @@ def main():
     project_root = arguments.project_root.resolve()
     plan_path = arguments.plan if arguments.plan.is_absolute() else project_root / arguments.plan
     source_directory = project_root / "src" / "main" / "java"
-    source_files = sorted(source_directory.rglob("*.java"))
+    source_files = sorted(
+        source_file
+        for source_file in source_directory.rglob("*.java")
+        if "gui" not in source_file.relative_to(source_directory).parts
+    )
     if not source_files:
         print(f"No Java source files found in {source_directory}", file=sys.stderr)
         return 2

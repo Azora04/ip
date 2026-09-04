@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720.0" prefWidth="600.0" styleClass="app-root"
+            stylesheets="@../css/main.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gary.gui.MainWindow">
+    <top>
+        <VBox spacing="4.0" styleClass="header">
+            <padding>
+                <Insets bottom="18.0" left="24.0" right="24.0" top="18.0" />
+            </padding>
+            <children>
+                <Label styleClass="title" text="GARY" />
+                <Label styleClass="subtitle" text="Your focused task companion" />
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
+                    pannable="true" styleClass="conversation-pane">
+            <content>
+                <VBox fx:id="dialogContainer" fillWidth="true" spacing="14.0"
+                      styleClass="dialog-container">
+                    <padding>
+                        <Insets bottom="22.0" left="18.0" right="18.0" top="22.0" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox spacing="10.0" styleClass="input-bar">
+            <padding>
+                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+            </padding>
+            <children>
+                <TextField fx:id="userInput" HBox.hgrow="ALWAYS"
+                           onAction="#handleUserInput"
+                           promptText="Type a command, e.g. todo read book"
+                           styleClass="command-field" />
+                <Button fx:id="sendButton" onAction="#handleUserInput"
+                        styleClass="send-button"
+                        text="Send" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

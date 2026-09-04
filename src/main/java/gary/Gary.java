@@ -40,16 +40,23 @@ public class Gary {
             String command = ui.readCommand();
             CommandType commandType = parser.parseCommandType(command);
             ui.showDivider();
-
+            ui.showMessage(createResponse(command, commandType));
+            ui.showDivider();
             if (commandType == CommandType.BYE) {
-                ui.showMessage("Bye. Hope to see you again soon!");
-                ui.showDivider();
                 break;
             }
-
-            handleCommand(command, commandType);
-            ui.showDivider();
         }
+    }
+
+    /**
+     * Returns Gary's response to one user command.
+     *
+     * @param command User command to process.
+     * @return Response to display to the user.
+     */
+    public String getResponse(String command) {
+        CommandType commandType = parser.parseCommandType(command);
+        return createResponse(command, commandType);
     }
 
     /**
@@ -61,105 +68,111 @@ public class Gary {
         new Gary(Path.of("data", "gary.txt")).run();
     }
 
-    private void handleCommand(String command, CommandType commandType) {
+    private String createResponse(String command, CommandType commandType) {
+        if (commandType == CommandType.BYE) {
+            return "Bye. Hope to see you again soon!";
+        }
+        return handleCommand(command, commandType);
+    }
+
+    private String handleCommand(String command, CommandType commandType) {
         if (commandType == CommandType.LIST) {
-            showTaskList();
+            return getTaskListResponse();
         } else if (commandType == CommandType.MARK) {
-            markTask(command);
+            return markTask(command);
         } else if (commandType == CommandType.UNMARK) {
-            unmarkTask(command);
+            return unmarkTask(command);
         } else if (commandType == CommandType.TODO
                 || commandType == CommandType.DEADLINE
                 || commandType == CommandType.EVENT) {
-            addTask(command, commandType);
+            return addTask(command, commandType);
         } else if (commandType == CommandType.DELETE) {
-            deleteTask(command);
+            return deleteTask(command);
         } else if (commandType == CommandType.FIND) {
-            findTasks(command);
-        } else {
-            ui.showMessage("Invalid command");
+            return findTasks(command);
         }
+        return "Invalid command";
     }
 
-    private void showTaskList() {
-        ui.showMessage("Here are the tasks in your list:");
+    private String getTaskListResponse() {
+        StringBuilder response = new StringBuilder("Here are the tasks in your list:");
         for (int i = 1; i <= tasks.size(); i++) {
-            ui.showMessage(i + "." + tasks.getTask(i));
+            response.append(System.lineSeparator())
+                    .append(i)
+                    .append('.')
+                    .append(tasks.getTask(i));
         }
+        return response.toString();
     }
 
-    private void markTask(String command) {
+    private String markTask(String command) {
         int taskNumber = parser.parseTaskNumber(command, tasks.size());
         if (taskNumber == -1) {
-            ui.showMessage("Error: The task number is invalid");
-            return;
+            return "Error: The task number is invalid";
         }
 
         Task task = tasks.markAsDone(taskNumber);
-        saveTasks();
-        ui.showMessage("Nice! I've marked this task as done:");
-        ui.showMessage("  " + task);
+        return addSaveError("Nice! I've marked this task as done:"
+                + System.lineSeparator() + "  " + task);
     }
 
-    private void unmarkTask(String command) {
+    private String unmarkTask(String command) {
         int taskNumber = parser.parseTaskNumber(command, tasks.size());
         if (taskNumber == -1) {
-            ui.showMessage("Error: The task number is invalid");
-            return;
+            return "Error: The task number is invalid";
         }
 
         Task task = tasks.markAsNotDone(taskNumber);
-        saveTasks();
-        ui.showMessage("OK, I've marked this task as not done yet:");
-        ui.showMessage("  " + task);
+        return addSaveError("OK, I've marked this task as not done yet:"
+                + System.lineSeparator() + "  " + task);
     }
 
-    private void addTask(String command, CommandType commandType) {
+    private String addTask(String command, CommandType commandType) {
         try {
-            addTask(parser.parseTask(command, commandType));
+            return addTask(parser.parseTask(command, commandType));
         } catch (IllegalArgumentException e) {
-            ui.showMessage(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    private void addTask(Task task) {
+    private String addTask(Task task) {
         tasks.add(task);
-        saveTasks();
-        ui.showMessage("Got it. I've added this task:");
-        ui.showMessage("  " + task);
-        ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
+        return addSaveError("Got it. I've added this task:"
+                + System.lineSeparator() + "  " + task
+                + System.lineSeparator() + "Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    private void deleteTask(String command) {
+    private String deleteTask(String command) {
         int taskNumber = parser.parseTaskNumber(command, tasks.size());
         if (taskNumber == -1) {
-            ui.showMessage("Error: The task number is invalid");
-            return;
+            return "Error: The task number is invalid";
         }
 
         Task task = tasks.delete(taskNumber);
-        saveTasks();
-        ui.showMessage("Noted. I've removed this task:");
-        ui.showMessage("  " + task);
-        ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
+        return addSaveError("Noted. I've removed this task:"
+                + System.lineSeparator() + "  " + task
+                + System.lineSeparator() + "Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    private void findTasks(String command) {
+    private String findTasks(String command) {
         String keyword;
         try {
             keyword = parser.parseKeyword(command);
         } catch (IllegalArgumentException e) {
-            ui.showMessage(e.getMessage());
-            return;
+            return e.getMessage();
         }
 
-        ui.showMessage("Here are the matching tasks in your list:");
+        StringBuilder response = new StringBuilder("Here are the matching tasks in your list:");
         for (int i = 1; i <= tasks.size(); i++) {
             Task task = tasks.getTask(i);
             if (task.containsKeyword(keyword)) {
-                ui.showMessage(i + "." + task);
+                response.append(System.lineSeparator())
+                        .append(i)
+                        .append('.')
+                        .append(task);
             }
         }
+        return response.toString();
     }
 
     private TaskList loadTasks() {
@@ -171,11 +184,12 @@ public class Gary {
         }
     }
 
-    private void saveTasks() {
+    private String addSaveError(String response) {
         try {
             storage.saveTasks(tasks.getTasks());
+            return response;
         } catch (IOException e) {
-            ui.showMessage("Error: Unable to save tasks");
+            return "Error: Unable to save tasks" + System.lineSeparator() + response;
         }
     }
 }

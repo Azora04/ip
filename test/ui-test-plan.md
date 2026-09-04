@@ -4,6 +4,8 @@ The entry point is `gary.Gary`. Each test case runs in a fresh process using Jav
 
 The runner compares the response printed between the two standard divider lines after each command. Line endings and surrounding blank lines are normalized; response text and internal whitespace are otherwise compared exactly. Startup output and all divider lines remain visible in the console-session record.
 
+The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `todo read book`, `list`, and `bye`, and verify that each command appears as a user dialog followed by the expected Gary response. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`.
+
 ## UI-01: Task lifecycle
 
 **Aim:** Verify typed tasks can be added, marked, listed, deleted, and listed again while preserving their details and status.

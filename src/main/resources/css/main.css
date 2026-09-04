@@ -1,0 +1,96 @@
+.app-root {
+    -fx-background-color: #f4f7fb;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.header {
+    -fx-background-color: linear-gradient(to right, #1f2a44, #334f7d);
+}
+
+.title {
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: white;
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #d7e3f6;
+}
+
+.conversation-pane,
+.conversation-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.dialog-container {
+    -fx-background-color: #f4f7fb;
+}
+
+.message-label {
+    -fx-background-radius: 14px;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 3px;
+    -fx-padding: 12px 15px;
+}
+
+.user-dialog .message-label {
+    -fx-background-color: #2f6fed;
+    -fx-text-fill: white;
+}
+
+.gary-dialog .message-label {
+    -fx-background-color: white;
+    -fx-border-color: #dce4ef;
+    -fx-border-radius: 14px;
+    -fx-text-fill: #1e293b;
+}
+
+.avatar-label {
+    -fx-background-radius: 25px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.user-dialog .avatar-label {
+    -fx-background-color: #dbe7ff;
+    -fx-text-fill: #1d4ed8;
+}
+
+.gary-dialog .avatar-label {
+    -fx-background-color: #1f2a44;
+    -fx-text-fill: white;
+}
+
+.input-bar {
+    -fx-alignment: center;
+    -fx-background-color: white;
+    -fx-border-color: #dce4ef transparent transparent transparent;
+}
+
+.command-field {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 10px;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 10px;
+    -fx-font-size: 14px;
+    -fx-padding: 11px 13px;
+}
+
+.command-field:focused {
+    -fx-border-color: #2f6fed;
+}
+
+.send-button {
+    -fx-background-color: #2f6fed;
+    -fx-background-radius: 10px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 11px 20px;
+    -fx-text-fill: white;
+}
+
+.send-button:hover {
+    -fx-background-color: #245dcc;
+}
