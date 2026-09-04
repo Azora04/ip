@@ -112,8 +112,9 @@ public class Gary {
         }
 
         Task task = tasks.markAsDone(taskNumber);
-        return addSaveError("Nice! I've marked this task as done:"
-                + System.lineSeparator() + "  " + task);
+        return addSaveError(formatResponse(
+                "Nice! I've marked this task as done:",
+                "  " + task));
     }
 
     private String unmarkTask(String command) {
@@ -123,8 +124,9 @@ public class Gary {
         }
 
         Task task = tasks.markAsNotDone(taskNumber);
-        return addSaveError("OK, I've marked this task as not done yet:"
-                + System.lineSeparator() + "  " + task);
+        return addSaveError(formatResponse(
+                "OK, I've marked this task as not done yet:",
+                "  " + task));
     }
 
     private String addTask(String command, CommandType commandType) {
@@ -137,9 +139,10 @@ public class Gary {
 
     private String addTask(Task task) {
         tasks.add(task);
-        return addSaveError("Got it. I've added this task:"
-                + System.lineSeparator() + "  " + task
-                + System.lineSeparator() + "Now you have " + tasks.size() + " tasks in the list.");
+        return addSaveError(formatResponse(
+                "Got it. I've added this task:",
+                "  " + task,
+                "Now you have " + tasks.size() + " tasks in the list."));
     }
 
     private String deleteTask(String command) {
@@ -149,9 +152,10 @@ public class Gary {
         }
 
         Task task = tasks.delete(taskNumber);
-        return addSaveError("Noted. I've removed this task:"
-                + System.lineSeparator() + "  " + task
-                + System.lineSeparator() + "Now you have " + tasks.size() + " tasks in the list.");
+        return addSaveError(formatResponse(
+                "Noted. I've removed this task:",
+                "  " + task,
+                "Now you have " + tasks.size() + " tasks in the list."));
     }
 
     private String findTasks(String command) {
@@ -189,7 +193,11 @@ public class Gary {
             storage.saveTasks(tasks.getTasks());
             return response;
         } catch (IOException e) {
-            return "Error: Unable to save tasks" + System.lineSeparator() + response;
+            return formatResponse("Error: Unable to save tasks", response);
         }
+    }
+
+    private static String formatResponse(String... lines) {
+        return String.join(System.lineSeparator(), lines);
     }
 }
