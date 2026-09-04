@@ -1,6 +1,5 @@
 package gary.storage;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,12 +12,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import gary.task.Deadline;
 import gary.task.Event;
 import gary.task.Task;
 import gary.task.Todo;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 class StorageTest {
     @TempDir
@@ -47,22 +47,20 @@ class StorageTest {
         storage.saveTasks(tasks);
         ArrayList<Task> loadedTasks = storage.loadTasks();
 
-        assertAll(
-                () -> assertEquals(List.of(
-                        "T | 1 | read book",
-                        "D | 0 | return book | 2019-12-02",
-                        "E | 0 | project meeting | 2019-08-06 | 2019-08-07"
-                ), Files.readAllLines(filePath, StandardCharsets.UTF_8)),
-                () -> assertEquals(3, loadedTasks.size()),
-                () -> assertInstanceOf(Todo.class, loadedTasks.get(0)),
-                () -> assertInstanceOf(Deadline.class, loadedTasks.get(1)),
-                () -> assertInstanceOf(Event.class, loadedTasks.get(2)),
-                () -> assertEquals("[T][X] read book", loadedTasks.get(0).toString()),
-                () -> assertEquals("[D][ ] return book (by: Dec 2 2019)",
-                        loadedTasks.get(1).toString()),
-                () -> assertEquals("[E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)",
-                        loadedTasks.get(2).toString())
-        );
+        assertEquals(List.of(
+                "T | 1 | read book",
+                "D | 0 | return book | 2019-12-02",
+                "E | 0 | project meeting | 2019-08-06 | 2019-08-07"
+        ), Files.readAllLines(filePath, StandardCharsets.UTF_8));
+        assertEquals(3, loadedTasks.size());
+        assertInstanceOf(Todo.class, loadedTasks.get(0));
+        assertInstanceOf(Deadline.class, loadedTasks.get(1));
+        assertInstanceOf(Event.class, loadedTasks.get(2));
+        assertEquals("[T][X] read book", loadedTasks.get(0).toString());
+        assertEquals("[D][ ] return book (by: Dec 2 2019)",
+                loadedTasks.get(1).toString());
+        assertEquals("[E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)",
+                loadedTasks.get(2).toString());
     }
 
     @Test
@@ -79,12 +77,10 @@ class StorageTest {
 
         ArrayList<Task> loadedTasks = storage.loadTasks();
 
-        assertAll(
-                () -> assertEquals(2, loadedTasks.size()),
-                () -> assertEquals("[T][X] read book", loadedTasks.get(0).toString()),
-                () -> assertEquals("[E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)",
-                        loadedTasks.get(1).toString())
-        );
+        assertEquals(2, loadedTasks.size());
+        assertEquals("[T][X] read book", loadedTasks.get(0).toString());
+        assertEquals("[E][ ] project meeting (from: Aug 6 2019 to: Aug 7 2019)",
+                loadedTasks.get(1).toString());
     }
 
     @Test
