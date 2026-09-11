@@ -25,6 +25,8 @@ public class Parser {
      * @return Matching command type, or {@link CommandType#UNKNOWN} when the input is invalid.
      */
     public CommandType parseCommandType(String input) {
+        assert input != null : "Input should not be null";
+
         CommandType commandType = CommandType.from(input);
         if (commandType == CommandType.BYE && !input.equals("bye")) {
             return CommandType.UNKNOWN;
@@ -44,6 +46,9 @@ public class Parser {
      * @throws IllegalArgumentException If the task details are incomplete or invalid.
      */
     public Task parseTask(String input, CommandType commandType) throws IllegalArgumentException {
+        assert input != null : "Input should not be null";
+        assert commandType != null : "Command type should not be null";
+
         return switch (commandType) {
             case TODO -> parseTodo(input);
             case DEADLINE -> parseDeadline(input);
@@ -60,6 +65,9 @@ public class Parser {
      * @return Parsed task number, or -1 when it is invalid.
      */
     public int parseTaskNumber(String input, int taskCount) {
+        assert input != null : "Input should not be null";
+        assert taskCount >= 0 : "Task count should not be negative";
+
         String numberText = getArguments(input);
         try {
             int taskNumber = Integer.parseInt(numberText);
@@ -77,6 +85,8 @@ public class Parser {
      * @throws IllegalArgumentException If the keyword is empty.
      */
     public String parseKeyword(String input) throws IllegalArgumentException {
+        assert input != null : "Input should not be null";
+
         String keyword = getArguments(input);
         if (keyword.isEmpty()) {
             throw new IllegalArgumentException("Error: The keyword for a find cannot be empty");

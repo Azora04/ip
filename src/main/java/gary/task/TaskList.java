@@ -22,6 +22,9 @@ public class TaskList {
      * @param tasks Initial tasks to store.
      */
     public TaskList(List<Task> tasks) {
+        assert tasks != null : "Initial task list should not be null";
+        assert tasks.stream().noneMatch(task -> task == null) : "Initial task list should not contain null tasks";
+
         this.tasks = new ArrayList<>(tasks);
     }
 
@@ -41,6 +44,8 @@ public class TaskList {
      * @return Task at the requested position.
      */
     public Task getTask(int taskNumber) {
+        assert isValidTaskNumber(taskNumber) : "Task number should refer to an existing task";
+
         return tasks.get(taskNumber - 1);
     }
 
@@ -59,6 +64,8 @@ public class TaskList {
      * @param task Task to add.
      */
     public void add(Task task) {
+        assert task != null : "Task to add should not be null";
+
         tasks.add(task);
     }
 
@@ -69,6 +76,8 @@ public class TaskList {
      * @return Deleted task.
      */
     public Task delete(int taskNumber) {
+        assert isValidTaskNumber(taskNumber) : "Task number should refer to an existing task";
+
         return tasks.remove(taskNumber - 1);
     }
 
@@ -94,5 +103,9 @@ public class TaskList {
         Task task = getTask(taskNumber);
         task.markAsNotDone();
         return task;
+    }
+
+    private boolean isValidTaskNumber(int taskNumber) {
+        return taskNumber >= 1 && taskNumber <= tasks.size();
     }
 }

@@ -26,6 +26,8 @@ public class Storage {
      * @param filePath Path of the task data file.
      */
     public Storage(Path filePath) {
+        assert filePath != null : "Storage file path should not be null";
+
         this.filePath = filePath;
     }
 
@@ -57,6 +59,9 @@ public class Storage {
      * @throws IOException If the tasks cannot be written.
      */
     public void saveTasks(List<Task> tasks) throws IOException {
+        assert tasks != null : "Task list should not be null";
+        assert tasks.stream().noneMatch(task -> task == null) : "Task list should not contain null tasks";
+
         Path parent = filePath.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
@@ -115,6 +120,8 @@ public class Storage {
      * @throws IllegalArgumentException If the task type is unsupported.
      */
     private String formatTask(Task task) {
+        assert task != null : "Task to format should not be null";
+
         String status = task.isDone() ? "1" : "0";
         if (task instanceof Todo) {
             return "T | " + status + " | " + task.getDescription();

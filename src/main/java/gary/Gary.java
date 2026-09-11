@@ -55,6 +55,8 @@ public class Gary {
      * @return Response to display to the user.
      */
     public String getResponse(String command) {
+        assert command != null : "Command should not be null";
+
         CommandType commandType = parser.parseCommandType(command);
         return createResponse(command, commandType);
     }
@@ -69,6 +71,9 @@ public class Gary {
     }
 
     private String createResponse(String command, CommandType commandType) {
+        assert command != null : "Command should not be null";
+        assert commandType != null : "Command type should not be null";
+
         if (commandType == CommandType.BYE) {
             return "Bye. Hope to see you again soon!";
         }
