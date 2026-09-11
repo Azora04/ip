@@ -4,7 +4,7 @@ The entry point is `gary.Gary`. Each test case runs in a fresh process using Jav
 
 The runner compares the response printed between the two standard divider lines after each command. Line endings and surrounding blank lines are normalized; response text and internal whitespace are otherwise compared exactly. Startup output and all divider lines remain visible in the console-session record.
 
-The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `todo read book`, `list`, and `bye`, and verify that each command appears as a user dialog followed by the expected Gary response. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`.
+The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `todo read book`, `list`, and `bye`, and verify that each command appears as a user dialog followed by the expected Gary response. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`.
 
 ## UI-01: Task lifecycle
 
@@ -220,6 +220,92 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "2.[D][ ] return book (by: Dec 2 2019)"
   ],
   "Error: The keyword for a find cannot be empty",
+  "Bye. Hope to see you again soon!"
+]
+```
+
+## UI-05A: Manage contacts
+
+**Aim:** Verify contacts can be added, listed, searched, deleted, and saved with all details intact.
+
+**Storage group:** contact-persistence
+
+### Inputs
+
+```json
+[
+  "contact add Alice Tan /phone 91234567 /email alice@example.com",
+  "contact add Bob Lim /phone 87654321 /email bob@example.com",
+  "contact list",
+  "contact find ALICE",
+  "contact delete 2",
+  "contact add Alice /phone /email alice@example.com",
+  "contact find",
+  "contact delete 2",
+  "contact rename Alice",
+  "bye"
+]
+```
+
+### Expected outputs
+
+```json
+[
+  [
+    "Got it. I've added this contact:",
+    "  Alice Tan (Phone: 91234567, Email: alice@example.com)",
+    "Now you have 1 contact."
+  ],
+  [
+    "Got it. I've added this contact:",
+    "  Bob Lim (Phone: 87654321, Email: bob@example.com)",
+    "Now you have 2 contacts."
+  ],
+  [
+    "Here are your contacts:",
+    "1. Alice Tan (Phone: 91234567, Email: alice@example.com)",
+    "2. Bob Lim (Phone: 87654321, Email: bob@example.com)"
+  ],
+  [
+    "Here are the matching contacts:",
+    "1. Alice Tan (Phone: 91234567, Email: alice@example.com)"
+  ],
+  [
+    "Noted. I've removed this contact:",
+    "  Bob Lim (Phone: 87654321, Email: bob@example.com)",
+    "Now you have 1 contact."
+  ],
+  "Error: Contact format must be contact add NAME /phone PHONE /email EMAIL",
+  "Error: The contact keyword cannot be empty",
+  "Error: The contact number is invalid",
+  "Invalid contact command",
+  "Bye. Hope to see you again soon!"
+]
+```
+
+## UI-05B: Reload contacts
+
+**Aim:** Verify contact changes are loaded by a later chatbot process.
+
+**Storage group:** contact-persistence
+
+### Inputs
+
+```json
+[
+  "contact list",
+  "bye"
+]
+```
+
+### Expected outputs
+
+```json
+[
+  [
+    "Here are your contacts:",
+    "1. Alice Tan (Phone: 91234567, Email: alice@example.com)"
+  ],
   "Bye. Hope to see you again soon!"
 ]
 ```

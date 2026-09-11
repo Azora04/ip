@@ -52,4 +52,27 @@ class GaryTest {
         assertEquals("Here are the tasks in your list:" + separator
                 + "1.[D][X] return book (by: Dec 2 2019)", secondGary.getResponse("list"));
     }
+
+    @Test
+    void getResponse_contactLifecycle_persistsUpdatedContacts() {
+        Path taskFilePath = temporaryDirectory.resolve("data").resolve("gary.txt");
+        Gary firstGary = new Gary(taskFilePath);
+        String separator = System.lineSeparator();
+
+        assertEquals("Got it. I've added this contact:" + separator
+                + "  Alice Tan (Phone: 91234567, Email: alice@example.com)" + separator
+                + "Now you have 1 contact.", firstGary.getResponse(
+                        "contact add Alice Tan /phone 91234567 /email alice@example.com"));
+        assertEquals("Here are the matching contacts:" + separator
+                + "1. Alice Tan (Phone: 91234567, Email: alice@example.com)",
+                firstGary.getResponse("contact find ALICE"));
+
+        Gary secondGary = new Gary(taskFilePath);
+        assertEquals("Here are your contacts:" + separator
+                + "1. Alice Tan (Phone: 91234567, Email: alice@example.com)",
+                secondGary.getResponse("contact list"));
+        assertEquals("Noted. I've removed this contact:" + separator
+                + "  Alice Tan (Phone: 91234567, Email: alice@example.com)" + separator
+                + "Now you have 0 contacts.", secondGary.getResponse("contact delete 1"));
+    }
 }

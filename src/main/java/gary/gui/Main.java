@@ -29,7 +29,7 @@ public class Main extends Application {
         BorderPane root = loader.load();
         loader.<MainWindow>getController().setGary(gary);
 
-        stage.setTitle("Gary - Task Assistant");
+        stage.setTitle("Gary - Task and Contact Assistant");
         stage.setMinWidth(560.0);
         stage.setMinHeight(680.0);
         stage.setScene(new Scene(root));

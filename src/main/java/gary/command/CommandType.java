@@ -22,6 +22,8 @@ public enum CommandType {
     DELETE("delete"),
     /** Finds tasks whose descriptions contain a keyword. */
     FIND("find"),
+    /** Manages contacts. */
+    CONTACT("contact"),
     /** Represents unrecognized input. */
     UNKNOWN("");
 
