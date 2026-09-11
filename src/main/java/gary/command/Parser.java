@@ -13,12 +13,6 @@ import gary.task.Todo;
  */
 public class Parser {
     /**
-     * Creates a parser for Gary commands.
-     */
-    public Parser() {
-    }
-
-    /**
      * Returns the command type represented by the user input.
      *
      * @param input User input to classify.
@@ -113,19 +107,18 @@ public class Parser {
         }
 
         String description = taskDetails.substring(0, byIndex).trim();
-        String by = taskDetails.substring(byIndex + 3).trim();
+        String deadlineDateText = taskDetails.substring(byIndex + 3).trim();
         if (description.isEmpty()) {
             throw new IllegalArgumentException("Error: The description of a deadline cannot be empty");
         }
-        if (by.isEmpty()) {
+        if (deadlineDateText.isEmpty()) {
             throw new IllegalArgumentException("Error: The deadline time cannot be empty");
         }
 
-        try {
-            return new Deadline(description, LocalDate.parse(by));
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Error: The deadline date must be in yyyy-MM-dd format");
-        }
+        LocalDate deadlineDate = parseDate(
+                deadlineDateText,
+                "Error: The deadline date must be in yyyy-MM-dd format");
+        return new Deadline(description, deadlineDate);
     }
 
     private Task parseEvent(String input) {
@@ -140,16 +133,23 @@ public class Parser {
         }
 
         String description = taskDetails.substring(0, fromIndex).trim();
-        String from = taskDetails.substring(fromIndex + 5, toIndex).trim();
-        String to = taskDetails.substring(toIndex + 3).trim();
-        if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+        String startDateText = taskDetails.substring(fromIndex + 5, toIndex).trim();
+        String endDateText = taskDetails.substring(toIndex + 3).trim();
+        if (description.isEmpty() || startDateText.isEmpty() || endDateText.isEmpty()) {
             throw new IllegalArgumentException("Error: The event format is invalid");
         }
 
+        String invalidDateMessage = "Error: The event dates must be in yyyy-MM-dd format";
+        LocalDate startDate = parseDate(startDateText, invalidDateMessage);
+        LocalDate endDate = parseDate(endDateText, invalidDateMessage);
+        return new Event(description, startDate, endDate);
+    }
+
+    private LocalDate parseDate(String dateText, String invalidDateMessage) {
         try {
-            return new Event(description, LocalDate.parse(from), LocalDate.parse(to));
+            return LocalDate.parse(dateText);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Error: The event dates must be in yyyy-MM-dd format");
+            throw new IllegalArgumentException(invalidDateMessage);
         }
     }
 
