@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import gary.task.Deadline;
 import gary.task.Event;
@@ -48,18 +50,14 @@ public class Storage {
      * @throws IOException If the data file cannot be read.
      */
     public ArrayList<Task> loadTasks() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
-            return tasks;
+            return new ArrayList<>();
         }
 
-        for (String line : Files.readAllLines(filePath, StandardCharsets.UTF_8)) {
-            Task task = parseTask(line);
-            if (task != null) {
-                tasks.add(task);
-            }
-        }
-        return tasks;
+        return Files.readAllLines(filePath, StandardCharsets.UTF_8).stream()
+                .map(this::parseTask)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -77,10 +75,9 @@ public class Storage {
             Files.createDirectories(parent);
         }
 
-        ArrayList<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(formatTask(task));
-        }
+        List<String> lines = tasks.stream()
+                .map(this::formatTask)
+                .toList();
         Files.write(filePath, lines, StandardCharsets.UTF_8);
     }
 
