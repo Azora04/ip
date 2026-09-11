@@ -18,6 +18,16 @@ import gary.task.Todo;
  * Loads tasks from and saves tasks to a text file.
  */
 public class Storage {
+    private static final int TASK_TYPE_INDEX = 0;
+    private static final int STATUS_INDEX = 1;
+    private static final int DESCRIPTION_INDEX = 2;
+    private static final int DEADLINE_DATE_INDEX = 3;
+    private static final int EVENT_START_DATE_INDEX = 3;
+    private static final int EVENT_END_DATE_INDEX = 4;
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int EVENT_FIELD_COUNT = 5;
+
     private final Path filePath;
 
     /**
@@ -81,37 +91,66 @@ public class Storage {
      */
     private Task parseTask(String line) {
         String[] fields = line.split(" \\| ", -1);
-        if (fields.length < 3 || !(fields[1].equals("0") || fields[1].equals("1"))) {
+        if (!hasValidHeader(fields)) {
             return null;
         }
 
         Task task;
         try {
-            switch (fields[0]) {
-                case "T":
-                    task = fields.length == 3 && !fields[2].isBlank() ? new Todo(fields[2]) : null;
-                    break;
-                case "D":
-                    task = fields.length == 4 && !fields[2].isBlank() && !fields[3].isBlank()
-                            ? new Deadline(fields[2], LocalDate.parse(fields[3])) : null;
-                    break;
-                case "E":
-                    task = fields.length == 5 && !fields[2].isBlank()
-                            && !fields[3].isBlank() && !fields[4].isBlank()
-                            ? new Event(fields[2], LocalDate.parse(fields[3]),
-                                    LocalDate.parse(fields[4])) : null;
-                    break;
-                default:
-                    task = null;
-            }
+            task = switch (fields[TASK_TYPE_INDEX]) {
+                case "T" -> parseTodo(fields);
+                case "D" -> parseDeadline(fields);
+                case "E" -> parseEvent(fields);
+                default -> null;
+            };
         } catch (DateTimeParseException e) {
             task = null;
         }
 
-        if (task != null && fields[1].equals("1")) {
+        if (task != null && fields[STATUS_INDEX].equals("1")) {
             task.markAsDone();
         }
         return task;
+    }
+
+    private boolean hasValidHeader(String[] fields) {
+        if (fields.length < TODO_FIELD_COUNT) {
+            return false;
+        }
+
+        String status = fields[STATUS_INDEX];
+        return status.equals("0") || status.equals("1");
+    }
+
+    private Task parseTodo(String[] fields) {
+        if (fields.length != TODO_FIELD_COUNT || fields[DESCRIPTION_INDEX].isBlank()) {
+            return null;
+        }
+        return new Todo(fields[DESCRIPTION_INDEX]);
+    }
+
+    private Task parseDeadline(String[] fields) {
+        if (fields.length != DEADLINE_FIELD_COUNT
+                || fields[DESCRIPTION_INDEX].isBlank()
+                || fields[DEADLINE_DATE_INDEX].isBlank()) {
+            return null;
+        }
+        return new Deadline(
+                fields[DESCRIPTION_INDEX],
+                LocalDate.parse(fields[DEADLINE_DATE_INDEX]));
+    }
+
+    private Task parseEvent(String[] fields) {
+        if (fields.length != EVENT_FIELD_COUNT
+                || fields[DESCRIPTION_INDEX].isBlank()
+                || fields[EVENT_START_DATE_INDEX].isBlank()
+                || fields[EVENT_END_DATE_INDEX].isBlank()) {
+            return null;
+        }
+        return new Event(
+                fields[DESCRIPTION_INDEX],
+                LocalDate.parse(fields[EVENT_START_DATE_INDEX]),
+                LocalDate.parse(fields[EVENT_END_DATE_INDEX]));
     }
 
     /**

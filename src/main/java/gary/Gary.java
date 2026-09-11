@@ -74,29 +74,16 @@ public class Gary {
         assert command != null : "Command should not be null";
         assert commandType != null : "Command type should not be null";
 
-        if (commandType == CommandType.BYE) {
-            return "Bye. Hope to see you again soon!";
-        }
-        return handleCommand(command, commandType);
-    }
-
-    private String handleCommand(String command, CommandType commandType) {
-        if (commandType == CommandType.LIST) {
-            return getTaskListResponse();
-        } else if (commandType == CommandType.MARK) {
-            return markTask(command);
-        } else if (commandType == CommandType.UNMARK) {
-            return unmarkTask(command);
-        } else if (commandType == CommandType.TODO
-                || commandType == CommandType.DEADLINE
-                || commandType == CommandType.EVENT) {
-            return addTask(command, commandType);
-        } else if (commandType == CommandType.DELETE) {
-            return deleteTask(command);
-        } else if (commandType == CommandType.FIND) {
-            return findTasks(command);
-        }
-        return "Invalid command";
+        return switch (commandType) {
+            case BYE -> "Bye. Hope to see you again soon!";
+            case LIST -> getTaskListResponse();
+            case MARK -> markTask(command);
+            case UNMARK -> unmarkTask(command);
+            case TODO, DEADLINE, EVENT -> addTask(command, commandType);
+            case DELETE -> deleteTask(command);
+            case FIND -> findTasks(command);
+            case UNKNOWN -> "Invalid command";
+        };
     }
 
     private String getTaskListResponse() {
