@@ -7,7 +7,7 @@ import java.util.Locale;
  */
 public class Task {
     /** Description of the task. */
-    private String description;
+    private final String description;
     /** Whether the task is complete. */
     private boolean isDone;
 
