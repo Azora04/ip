@@ -91,7 +91,7 @@ public class Parser {
 
         String keyword = getArguments(input);
         if (keyword.isEmpty()) {
-            throw new IllegalArgumentException("Error: The keyword for a find cannot be empty");
+            throw new IllegalArgumentException("Meow? The keyword for a find cannot be empty.");
         }
         return keyword;
     }
@@ -99,7 +99,7 @@ public class Parser {
     private Task parseTodo(String input) {
         String description = getArguments(input);
         if (description.isEmpty()) {
-            throw new IllegalArgumentException("Error: The description of a todo cannot be empty");
+            throw new IllegalArgumentException("Meow? The description of a todo cannot be empty.");
         }
         return new Todo(description);
     }
@@ -108,7 +108,7 @@ public class Parser {
         String taskDetails = getArguments(input);
         int byIndex = taskDetails.indexOf("/by");
         if (taskDetails.isEmpty()) {
-            throw new IllegalArgumentException("Error: The description of a deadline cannot be empty");
+            throw new IllegalArgumentException("Meow? The description of a deadline cannot be empty.");
         }
         if (byIndex == -1) {
             throw new IllegalArgumentException("Error: The deadline format is invalid");
@@ -117,10 +117,10 @@ public class Parser {
         String description = taskDetails.substring(0, byIndex).trim();
         String deadlineDateText = taskDetails.substring(byIndex + 3).trim();
         if (description.isEmpty()) {
-            throw new IllegalArgumentException("Error: The description of a deadline cannot be empty");
+            throw new IllegalArgumentException("Meow? The description of a deadline cannot be empty.");
         }
         if (deadlineDateText.isEmpty()) {
-            throw new IllegalArgumentException("Error: The deadline time cannot be empty");
+            throw new IllegalArgumentException("Meow? The deadline date cannot be empty.");
         }
 
         LocalDate deadlineDate = parseDate(
@@ -134,7 +134,7 @@ public class Parser {
         int fromIndex = taskDetails.indexOf("/from");
         int toIndex = taskDetails.indexOf("/to");
         if (taskDetails.isEmpty()) {
-            throw new IllegalArgumentException("Error: The description of an event cannot be empty");
+            throw new IllegalArgumentException("Meow? The description of an event cannot be empty.");
         }
         if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
             throw new IllegalArgumentException("Error: The event format is invalid");

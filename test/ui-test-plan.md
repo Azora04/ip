@@ -4,7 +4,7 @@ The entry point is `gary.Gary`. Each test case runs in a fresh process using Jav
 
 The runner compares the response printed between the two standard divider lines after each command. Line endings and surrounding blank lines are normalized; response text and internal whitespace are otherwise compared exactly. Startup output and all divider lines remain visible in the console-session record.
 
-The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `help`, `todo read book`, `list`, `blah`, and `bye`, and verify that each command appears as a compact right-aligned command chip without a user avatar. Verify that the supplied Gary picture appears in the header and beside Gary's left-aligned responses, the supplied jellyfish scene fills the conversation background beneath a readable tint, the subtitle contains no theme location, the help guide has distinct section headings and monospaced alignment, the invalid command uses the coral warning treatment, and the farewell uses its distinct treatment. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`. Keep the input field focused and use the mouse wheel over the input bar; verify the conversation scrolls without requiring a click in the conversation. Resize the window to its minimum size and then wider than its initial size; verify messages wrap without horizontal scrolling, the background continues to cover the conversation area, the input field expands, the Send button remains usable, and the compact header and input bar remain visible.
+The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `help`, `todo read book`, `list`, `blah`, and `bye`, and verify that each command appears as a compact right-aligned command chip without a user avatar. Verify that the supplied Gary picture appears in the header and beside Gary's left-aligned responses, the supplied jellyfish scene fills the conversation background beneath a readable tint, the subtitle reads `Your sea-snail task companion`, and Gary uses `Meow` only in his greeting, missing-input guidance, unknown-command response, and farewell. Verify that routine successful commands do not contain `Meow`, the help guide has distinct section headings and monospaced alignment, the unknown command uses the coral warning treatment, and the farewell uses its distinct treatment. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`. Keep the input field focused and use the mouse wheel over the input bar; verify the conversation scrolls without requiring a click in the conversation. Resize the window to its minimum size and then wider than its initial size; verify messages wrap without horizontal scrolling, the background continues to cover the conversation area, the input field expands, the Send button remains usable, and the compact header and input bar remain visible.
 
 ## UI-01: Task lifecycle
 
@@ -64,7 +64,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "1.[D][X] return book (by: 02-12-2019)",
     "2.[E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)"
   ],
-  "Bye. Hope to see you again soon!"
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -89,12 +89,12 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 
 ```json
 [
-  "Error: The description of a todo cannot be empty",
+  "Meow? The description of a todo cannot be empty.",
   "Error: The deadline date must be in DD-MM-YYYY format",
   "Error: The event dates must be in DD-MM-YYYY format",
   "Error: The task number is invalid",
-  "Invalid command",
-  "Bye. Hope to see you again soon!"
+  "Meow... I don't recognize that command. Type help to see the available commands.",
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -139,7 +139,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "Nice! I've marked this task as done:",
     "  [D][X] return book (by: 02-12-2019)"
   ],
-  "Bye. Hope to see you again soon!"
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -174,7 +174,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "  [T][ ] read book",
     "Now you have 2 tasks in the list."
   ],
-  "Bye. Hope to see you again soon!"
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -219,8 +219,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "1.[T][ ] read book",
     "2.[D][ ] return book (by: 02-12-2019)"
   ],
-  "Error: The keyword for a find cannot be empty",
-  "Bye. Hope to see you again soon!"
+  "Meow? The keyword for a find cannot be empty.",
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -276,10 +276,10 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "Now you have 1 contact."
   ],
   "Error: Contact format must be contact add NAME /phone PHONE /email EMAIL",
-  "Error: The contact keyword cannot be empty",
+  "Meow? The contact keyword cannot be empty.",
   "Error: The contact number is invalid",
-  "Invalid contact command",
-  "Bye. Hope to see you again soon!"
+  "Meow... I don't recognize that contact command. Type help to see the available commands.",
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -306,7 +306,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "Here are your contacts:",
     "1. Alice Tan (Phone: 91234567, Email: alice@example.com)"
   ],
-  "Bye. Hope to see you again soon!"
+  "Meow! Sea you again soon!"
 ]
 ```
 
@@ -357,7 +357,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "  help              Show this guide.",
     "  bye               Exit Gary."
   ],
-  "Invalid command",
-  "Bye. Hope to see you again soon!"
+  "Meow... I don't recognize that command. Type help to see the available commands.",
+  "Meow! Sea you again soon!"
 ]
 ```

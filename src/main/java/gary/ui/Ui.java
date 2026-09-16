@@ -47,7 +47,7 @@ public class Ui {
     public void showWelcome() {
         System.out.println(DIVIDER + "\n"
                 + BANNER + "\n"
-                + "Hello! I'm Gary.\n"
+                + "Meow! I'm Gary.\n"
                 + "What can I do for you?\n"
                 + DIVIDER + "\n");
     }

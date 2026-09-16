@@ -98,7 +98,7 @@ public class Gary {
         assert commandType != null : "Command type should not be null";
 
         return switch (commandType) {
-            case BYE -> ChatResponse.farewell("Bye. Hope to see you again soon!");
+            case BYE -> ChatResponse.farewell("Meow! Sea you again soon!");
             case HELP -> getHelpResponse();
             case LIST -> getTaskListResponse();
             case MARK -> markTask(command);
@@ -107,7 +107,8 @@ public class Gary {
             case DELETE -> deleteTask(command);
             case FIND -> findTasks(command);
             case CONTACT -> handleContactCommand(command);
-            case UNKNOWN -> ChatResponse.error("Invalid command");
+            case UNKNOWN -> ChatResponse.error(
+                    "Meow... I don't recognize that command. Type help to see the available commands.");
         };
     }
 
@@ -149,7 +150,8 @@ public class Gary {
             case LIST -> getContactListResponse();
             case FIND -> findContacts(command);
             case DELETE -> deleteContact(command);
-            case UNKNOWN -> ChatResponse.error("Invalid contact command");
+            case UNKNOWN -> ChatResponse.error(
+                    "Meow... I don't recognize that contact command. Type help to see the available commands.");
         };
     }
 
