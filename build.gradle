@@ -19,7 +19,7 @@ checkstyle {
 }
 
 dependencies {
-    String javaFxVersion = '17.0.7'
+    String javaFxVersion = '25.0.2'
     String jUnitVersion = '5.14.4'
 
     implementation "org.openjfx:javafx-base:${javaFxVersion}:win"
@@ -57,6 +57,7 @@ test {
 
 application {
     mainClass = 'gary.gui.Launcher'
+    applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED']
 }
 
 jar {
@@ -68,6 +69,9 @@ jar {
 
 shadowJar {
     archiveFileName = 'gary.jar'
+    manifest {
+        attributes 'Enable-Native-Access': 'ALL-UNNAMED'
+    }
 }
 
 run {
