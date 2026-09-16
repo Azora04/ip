@@ -1,6 +1,7 @@
 package gary.gui;
 
 import gary.Gary;
+import gary.ui.ChatResponse;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -36,7 +37,7 @@ public class MainWindow {
      */
     public void setGary(Gary gary) {
         this.gary = gary;
-        dialogContainer.getChildren().add(DialogBox.getGaryDialog(WELCOME_MESSAGE));
+        dialogContainer.getChildren().add(DialogBox.getGaryDialog(ChatResponse.normal(WELCOME_MESSAGE)));
     }
 
     @FXML
@@ -46,7 +47,7 @@ public class MainWindow {
             return;
         }
 
-        String response = gary.getResponse(input);
+        ChatResponse response = gary.getChatResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input),
                 DialogBox.getGaryDialog(response));

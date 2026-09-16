@@ -9,30 +9,36 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="600.0" styleClass="app-root"
+<BorderPane prefHeight="640.0" prefWidth="520.0" styleClass="app-root"
             stylesheets="@../css/main.css"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="gary.gui.MainWindow">
     <top>
-        <VBox spacing="4.0" styleClass="header">
+        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="header">
             <padding>
-                <Insets bottom="18.0" left="24.0" right="24.0" top="18.0" />
+                <Insets bottom="10.0" left="14.0" right="14.0" top="10.0" />
             </padding>
             <children>
-                <Label styleClass="title" text="GARY" />
-                <Label styleClass="subtitle" text="Your focused task companion" />
+                <Label alignment="CENTER" styleClass="brand-icon" text="🐌" />
+                <VBox spacing="1.0">
+                    <children>
+                        <Label styleClass="title" text="GARY" />
+                        <Label styleClass="subtitle"
+                               text="Your Bikini Bottom task &amp; contact companion" />
+                    </children>
+                </VBox>
             </children>
-        </VBox>
+        </HBox>
     </top>
     <center>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
                     pannable="true" styleClass="conversation-pane">
             <content>
-                <VBox fx:id="dialogContainer" fillWidth="true" spacing="14.0"
+                <VBox fx:id="dialogContainer" fillWidth="true" spacing="9.0"
                       styleClass="dialog-container">
                     <padding>
-                        <Insets bottom="22.0" left="18.0" right="18.0" top="22.0" />
+                        <Insets bottom="14.0" left="12.0" right="12.0" top="14.0" />
                     </padding>
                 </VBox>
             </content>
@@ -41,7 +47,7 @@
     <bottom>
         <HBox spacing="10.0" styleClass="input-bar">
             <padding>
-                <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                <Insets bottom="11.0" left="12.0" right="12.0" top="11.0" />
             </padding>
             <children>
                 <TextField fx:id="userInput" HBox.hgrow="ALWAYS"

@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Objects;
 
+import gary.ui.ChatResponse;
+import gary.ui.ResponseType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,6 +20,9 @@ import javafx.scene.layout.HBox;
  * Displays one message and identifies its speaker.
  */
 public class DialogBox extends HBox {
+    private static final double GARY_MESSAGE_WIDTH_RATIO = 0.82;
+    private static final double USER_MESSAGE_WIDTH_RATIO = 0.72;
+
     @FXML
     private Label avatar;
     @FXML
@@ -47,22 +52,38 @@ public class DialogBox extends HBox {
      * @return User dialog box.
      */
     public static DialogBox getUserDialog(String text) {
-        DialogBox dialogBox = new DialogBox(text, "YOU");
+        DialogBox dialogBox = new DialogBox(text, "");
         dialogBox.getStyleClass().add("user-dialog");
+        dialogBox.avatar.setManaged(false);
+        dialogBox.avatar.setVisible(false);
+        dialogBox.bindMessageWidth(USER_MESSAGE_WIDTH_RATIO);
         return dialogBox;
     }
 
     /**
-     * Returns a left-aligned Gary message.
+     * Returns a left-aligned Gary response with styling based on its type.
      *
-     * @param text Message text.
-     * @return Gary dialog box.
+     * @param response Typed response to display.
+     * @return Styled Gary dialog box.
      */
-    public static DialogBox getGaryDialog(String text) {
-        DialogBox dialogBox = new DialogBox(text, "G");
+    public static DialogBox getGaryDialog(ChatResponse response) {
+        String message = response.type() == ResponseType.ERROR
+                ? "⚠  " + response.message()
+                : response.message();
+        DialogBox dialogBox = new DialogBox(message, "🐌");
         dialogBox.getStyleClass().add("gary-dialog");
+        if (response.type() == ResponseType.ERROR) {
+            dialogBox.getStyleClass().add("error-dialog");
+        } else if (response.type() == ResponseType.FAREWELL) {
+            dialogBox.getStyleClass().add("farewell-dialog");
+        }
+        dialogBox.bindMessageWidth(GARY_MESSAGE_WIDTH_RATIO);
         dialogBox.flip();
         return dialogBox;
+    }
+
+    private void bindMessageWidth(double widthRatio) {
+        dialog.maxWidthProperty().bind(widthProperty().multiply(widthRatio));
     }
 
     private void flip() {
