@@ -1,5 +1,7 @@
 package gary.contact;
 
+import java.util.Locale;
+
 /**
  * Represents an operation supported by the contact manager.
  */
@@ -30,12 +32,12 @@ public enum ContactCommandType {
     public static ContactCommandType from(String input) {
         assert input != null : "Contact input should not be null";
 
-        String[] commandParts = input.split(" ", 3);
+        String[] commandParts = input.strip().split("\\s+", 3);
         if (commandParts.length < 2) {
             return UNKNOWN;
         }
 
-        String keyword = commandParts[1];
+        String keyword = commandParts[1].toLowerCase(Locale.ENGLISH);
         for (ContactCommandType commandType : values()) {
             if (commandType.keyword.equals(keyword)) {
                 return commandType;

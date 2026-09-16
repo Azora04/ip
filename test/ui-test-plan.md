@@ -275,7 +275,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "  Bob Lim (Phone: 87654321, Email: bob@example.com)",
     "Now you have 1 contact."
   ],
-  "Error: Contact format must be contact add NAME /phone PHONE /email EMAIL",
+  "Meow? Use: contact add NAME /phone PHONE /email EMAIL.",
   "Meow? The contact keyword cannot be empty.",
   "Error: The contact number is invalid",
   "Meow... I don't recognize that contact command. Type help to see the available commands.",
@@ -357,6 +357,54 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "  help              Show this guide.",
     "  bye               Exit Gary."
   ],
+  "Meow... I don't recognize that command. Type help to see the available commands.",
+  "Meow! Sea you again soon!"
+]
+```
+
+## UI-07: Common input mistakes and missing files
+
+**Aim:** Verify Gary starts with missing data files, accepts harmless whitespace and capitalization differences, and explains malformed commands without terminating.
+
+### Inputs
+
+```json
+[
+  "   LIST   ",
+  "ToDo   read instructions",
+  "DEADLINE submit report /BY 31-02-2026",
+  "deadline submit report 31-12-2026",
+  "event trip /FROM 05-01-2027 /TO 04-01-2027",
+  "mark one",
+  "contact   LIST",
+  "contact ADD Alice Tan /PHONE 91234567 /EMAIL alice@example.com",
+  "contact list extra",
+  "bye extra",
+  "bye"
+]
+```
+
+### Expected outputs
+
+```json
+[
+  "Your task list is empty. Add one with todo, deadline, or event.",
+  [
+    "Got it. I've added this task:",
+    "  [T][ ] read instructions",
+    "Now you have 1 tasks in the list."
+  ],
+  "Error: The deadline date must be in DD-MM-YYYY format",
+  "Meow? Use: deadline DESCRIPTION /by DD-MM-YYYY.",
+  "Error: The event end date cannot be before the start date",
+  "Error: The task number is invalid",
+  "Your contact list is empty. Add one with contact add.",
+  [
+    "Got it. I've added this contact:",
+    "  Alice Tan (Phone: 91234567, Email: alice@example.com)",
+    "Now you have 1 contact."
+  ],
+  "Meow... I don't recognize that contact command. Type help to see the available commands.",
   "Meow... I don't recognize that command. Type help to see the available commands.",
   "Meow! Sea you again soon!"
 ]

@@ -44,4 +44,15 @@ class ContactParserTest {
         assertEquals("Alice", parser.parseKeyword("contact find Alice"));
         assertThrows(IllegalArgumentException.class, () -> parser.parseKeyword("contact find"));
     }
+
+    @Test
+    void parseCommand_variedWhitespaceAndCase_returnsContact() {
+        assertEquals(ContactCommandType.LIST, parser.parseCommandType("contact   LIST"));
+
+        Contact contact = parser.parseContact(
+                "CONTACT ADD Alice Tan /PHONE 91234567 /EMAIL alice@example.com");
+        assertEquals("Alice Tan", contact.getName());
+        assertEquals("91234567", contact.getPhone());
+        assertEquals("alice@example.com", contact.getEmail());
+    }
 }
