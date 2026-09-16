@@ -30,8 +30,9 @@ public class Main extends Application {
         loader.<MainWindow>getController().setGary(gary);
 
         stage.setTitle("Gary - Task and Contact Assistant");
-        stage.setMinWidth(560.0);
-        stage.setMinHeight(680.0);
+        stage.setMinWidth(420.0);
+        stage.setMinHeight(480.0);
+        stage.setResizable(true);
         stage.setScene(new Scene(root));
         stage.show();
     }

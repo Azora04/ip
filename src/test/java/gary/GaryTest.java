@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import gary.ui.ResponseType;
+
 class GaryTest {
     @TempDir
     private Path temporaryDirectory;
@@ -37,6 +39,15 @@ class GaryTest {
         assertEquals("Error: The description of a todo cannot be empty", gary.getResponse("todo"));
         assertEquals("Invalid command", gary.getResponse("blah"));
         assertEquals("Bye. Hope to see you again soon!", gary.getResponse("bye"));
+    }
+
+    @Test
+    void getChatResponse_normalErrorAndFarewellCommands_returnsPresentationTypes() {
+        Gary gary = new Gary(temporaryDirectory.resolve("gary.txt"));
+
+        assertEquals(ResponseType.NORMAL, gary.getChatResponse("todo read book").type());
+        assertEquals(ResponseType.ERROR, gary.getChatResponse("unknown").type());
+        assertEquals(ResponseType.FAREWELL, gary.getChatResponse("bye").type());
     }
 
     @Test
