@@ -1,11 +1,13 @@
 package gary.contact;
 
+import java.util.Locale;
+
 /**
  * Parses contact commands and their arguments.
  */
 public class ContactParser {
     private static final String CONTACT_FORMAT =
-            "Error: Contact format must be contact add NAME /phone PHONE /email EMAIL";
+            "Meow? Use: contact add NAME /phone PHONE /email EMAIL.";
 
     /**
      * Returns the operation represented by a contact command.
@@ -17,7 +19,7 @@ public class ContactParser {
         assert input != null : "Contact input should not be null";
 
         ContactCommandType commandType = ContactCommandType.from(input);
-        if (commandType == ContactCommandType.LIST && !input.equals("contact list")) {
+        if (commandType == ContactCommandType.LIST && !getActionArguments(input).isEmpty()) {
             return ContactCommandType.UNKNOWN;
         }
         return commandType;
@@ -32,8 +34,9 @@ public class ContactParser {
      */
     public Contact parseContact(String input) throws IllegalArgumentException {
         String details = getActionArguments(input);
-        int phoneIndex = details.indexOf("/phone");
-        int emailIndex = details.indexOf("/email");
+        String lowercaseDetails = details.toLowerCase(Locale.ENGLISH);
+        int phoneIndex = lowercaseDetails.indexOf("/phone");
+        int emailIndex = lowercaseDetails.indexOf("/email");
         if (phoneIndex == -1 || emailIndex == -1 || phoneIndex > emailIndex) {
             throw new IllegalArgumentException(CONTACT_FORMAT);
         }
@@ -84,7 +87,7 @@ public class ContactParser {
     private String getActionArguments(String input) {
         assert input != null : "Contact input should not be null";
 
-        String[] commandParts = input.split(" ", 3);
+        String[] commandParts = input.strip().split("\\s+", 3);
         return commandParts.length < 3 ? "" : commandParts[2].trim();
     }
 }

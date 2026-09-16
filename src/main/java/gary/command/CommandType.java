@@ -1,5 +1,7 @@
 package gary.command;
 
+import java.util.Locale;
+
 /**
  * Represents a command recognized by Gary.
  */
@@ -42,8 +44,14 @@ public enum CommandType {
      * @return Matching command type, or {@link #UNKNOWN} if no command matches.
      */
     public static CommandType from(String input) {
-        int separatorIndex = input.indexOf(' ');
-        String keyword = separatorIndex == -1 ? input : input.substring(0, separatorIndex);
+        assert input != null : "Command input should not be null";
+
+        String strippedInput = input.strip();
+        if (strippedInput.isEmpty()) {
+            return UNKNOWN;
+        }
+
+        String keyword = strippedInput.split("\\s+", 2)[0].toLowerCase(Locale.ENGLISH);
         for (CommandType commandType : values()) {
             if (commandType.keyword.equals(keyword)) {
                 return commandType;

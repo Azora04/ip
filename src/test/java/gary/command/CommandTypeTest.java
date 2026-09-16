@@ -23,10 +23,10 @@ class CommandTypeTest {
     }
 
     @Test
-    void from_unknownOrEmptyInput_returnsUnknown() {
+    void from_unknownEmptyAndNormalizedInput_returnsMatchingTypes() {
         assertEquals(CommandType.UNKNOWN, CommandType.from(""));
         assertEquals(CommandType.UNKNOWN, CommandType.from("blah"));
-        assertEquals(CommandType.UNKNOWN, CommandType.from(" todo read book"));
-        assertEquals(CommandType.UNKNOWN, CommandType.from("Todo read book"));
+        assertEquals(CommandType.TODO, CommandType.from(" todo read book"));
+        assertEquals(CommandType.TODO, CommandType.from("Todo read book"));
     }
 }

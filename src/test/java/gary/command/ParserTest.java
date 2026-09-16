@@ -23,6 +23,12 @@ class ParserTest {
     }
 
     @Test
+    void parseCommandType_variedWhitespaceAndCase_returnsCommandType() {
+        assertEquals(CommandType.LIST, parser.parseCommandType("  LIST  "));
+        assertEquals(CommandType.TODO, parser.parseCommandType("\ttodo\tread book"));
+    }
+
+    @Test
     void parseTask_supportedTypes_returnsMatchingTasks() {
         assertInstanceOf(Todo.class,
                 parser.parseTask("todo read book", CommandType.TODO));
@@ -47,12 +53,23 @@ class ParserTest {
                 "deadline report /by 2019-12-02", CommandType.DEADLINE);
         Executable parseDeadlineWithImpossibleDate = () -> parser.parseTask(
                 "deadline report /by 31-02-2019", CommandType.DEADLINE);
+        Executable parseEventWithReversedDates = () -> parser.parseTask(
+                "event trip /from 03-12-2019 /to 02-12-2019", CommandType.EVENT);
 
         assertThrows(IllegalArgumentException.class, parseTodoWithoutDescription);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithInvalidDate);
         assertThrows(IllegalArgumentException.class, parseEventWithInvalidDates);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithIsoDate);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithImpossibleDate);
+        assertThrows(IllegalArgumentException.class, parseEventWithReversedDates);
+    }
+
+    @Test
+    void parseTask_uppercaseSeparators_returnsMatchingTasks() {
+        assertInstanceOf(Deadline.class,
+                parser.parseTask("DEADLINE report /BY 02-12-2019", CommandType.DEADLINE));
+        assertInstanceOf(Event.class,
+                parser.parseTask("EVENT meeting /FROM 02-12-2019 /TO 03-12-2019", CommandType.EVENT));
     }
 
     @Test

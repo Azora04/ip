@@ -169,6 +169,10 @@ public class Gary {
     }
 
     private ChatResponse getContactListResponse() {
+        if (contacts.size() == 0) {
+            return ChatResponse.normal("Your contact list is empty. Add one with contact add.");
+        }
+
         StringBuilder response = new StringBuilder("Here are your contacts:");
         appendMatchingContacts(response, "");
         return ChatResponse.normal(response.toString());
@@ -218,6 +222,11 @@ public class Gary {
     }
 
     private ChatResponse getTaskListResponse() {
+        if (tasks.size() == 0) {
+            return ChatResponse.normal(
+                    "Your task list is empty. Add one with todo, deadline, or event.");
+        }
+
         StringBuilder response = new StringBuilder("Here are the tasks in your list:");
         for (int i = 1; i <= tasks.size(); i++) {
             response.append(System.lineSeparator())
@@ -305,7 +314,7 @@ public class Gary {
     private TaskList loadTasks() {
         try {
             return new TaskList(storage.loadTasks());
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             ui.showMessage("Error: Unable to load tasks");
             return new TaskList();
         }
@@ -314,7 +323,7 @@ public class Gary {
     private ContactList loadContacts() {
         try {
             return new ContactList(contactStorage.loadContacts());
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             ui.showMessage("Error: Unable to load contacts");
             return new ContactList();
         }
@@ -324,7 +333,7 @@ public class Gary {
         try {
             storage.saveTasks(tasks.getTasks());
             return ChatResponse.normal(response);
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             return ChatResponse.error(formatResponse("Error: Unable to save tasks", response));
         }
     }
@@ -333,7 +342,7 @@ public class Gary {
         try {
             contactStorage.saveContacts(contacts.getContacts());
             return ChatResponse.normal(response);
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             return ChatResponse.error(formatResponse("Error: Unable to save contacts", response));
         }
     }

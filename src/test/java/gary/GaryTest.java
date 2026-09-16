@@ -101,6 +101,20 @@ class GaryTest {
     }
 
     @Test
+    void getResponse_dataFilesMissing_reportsEmptyListsAndRemainsUsable() {
+        Path filePath = temporaryDirectory.resolve("missing").resolve("gary.txt");
+        Gary gary = new Gary(filePath);
+
+        assertEquals("Your task list is empty. Add one with todo, deadline, or event.",
+                gary.getResponse("list"));
+        assertEquals("Your contact list is empty. Add one with contact add.",
+                gary.getResponse("contact list"));
+        assertEquals("Got it. I've added this task:" + System.lineSeparator()
+                + "  [T][ ] first task" + System.lineSeparator()
+                + "Now you have 1 tasks in the list.", gary.getResponse("todo first task"));
+    }
+
+    @Test
     void getResponse_contactLifecycle_persistsUpdatedContacts() {
         Path taskFilePath = temporaryDirectory.resolve("data").resolve("gary.txt");
         Gary firstGary = new Gary(taskFilePath);

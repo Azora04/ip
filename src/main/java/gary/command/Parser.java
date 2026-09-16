@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.Locale;
 
 import gary.task.Deadline;
 import gary.task.Event;
@@ -27,13 +28,10 @@ public class Parser {
         assert input != null : "Input should not be null";
 
         CommandType commandType = CommandType.from(input);
-        if (commandType == CommandType.BYE && !input.equals("bye")) {
-            return CommandType.UNKNOWN;
-        }
-        if (commandType == CommandType.HELP && !input.equals("help")) {
-            return CommandType.UNKNOWN;
-        }
-        if (commandType == CommandType.LIST && !input.equals("list")) {
+        boolean isArgumentlessCommand = commandType == CommandType.BYE
+                || commandType == CommandType.HELP
+                || commandType == CommandType.LIST;
+        if (isArgumentlessCommand && !getArguments(input).isEmpty()) {
             return CommandType.UNKNOWN;
         }
         return commandType;
@@ -106,12 +104,14 @@ public class Parser {
 
     private Task parseDeadline(String input) {
         String taskDetails = getArguments(input);
-        int byIndex = taskDetails.indexOf("/by");
+        String lowercaseDetails = taskDetails.toLowerCase(Locale.ENGLISH);
+        int byIndex = lowercaseDetails.indexOf("/by");
         if (taskDetails.isEmpty()) {
             throw new IllegalArgumentException("Meow? The description of a deadline cannot be empty.");
         }
         if (byIndex == -1) {
-            throw new IllegalArgumentException("Error: The deadline format is invalid");
+            throw new IllegalArgumentException(
+                    "Meow? Use: deadline DESCRIPTION /by DD-MM-YYYY.");
         }
 
         String description = taskDetails.substring(0, byIndex).trim();
@@ -131,25 +131,32 @@ public class Parser {
 
     private Task parseEvent(String input) {
         String taskDetails = getArguments(input);
-        int fromIndex = taskDetails.indexOf("/from");
-        int toIndex = taskDetails.indexOf("/to");
+        String lowercaseDetails = taskDetails.toLowerCase(Locale.ENGLISH);
+        int fromIndex = lowercaseDetails.indexOf("/from");
+        int toIndex = lowercaseDetails.indexOf("/to");
         if (taskDetails.isEmpty()) {
             throw new IllegalArgumentException("Meow? The description of an event cannot be empty.");
         }
         if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-            throw new IllegalArgumentException("Error: The event format is invalid");
+            throw new IllegalArgumentException(
+                    "Meow? Use: event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY.");
         }
 
         String description = taskDetails.substring(0, fromIndex).trim();
         String startDateText = taskDetails.substring(fromIndex + 5, toIndex).trim();
         String endDateText = taskDetails.substring(toIndex + 3).trim();
         if (description.isEmpty() || startDateText.isEmpty() || endDateText.isEmpty()) {
-            throw new IllegalArgumentException("Error: The event format is invalid");
+            throw new IllegalArgumentException(
+                    "Meow? Use: event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY.");
         }
 
         String invalidDateMessage = "Error: The event dates must be in DD-MM-YYYY format";
         LocalDate startDate = parseDate(startDateText, invalidDateMessage);
         LocalDate endDate = parseDate(endDateText, invalidDateMessage);
+        if (endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException(
+                    "Error: The event end date cannot be before the start date");
+        }
         return new Event(description, startDate, endDate);
     }
 
@@ -162,7 +169,7 @@ public class Parser {
     }
 
     private String getArguments(String input) {
-        int separatorIndex = input.indexOf(' ');
-        return separatorIndex == -1 ? "" : input.substring(separatorIndex + 1).trim();
+        String[] commandParts = input.strip().split("\\s+", 2);
+        return commandParts.length < 2 ? "" : commandParts[1].strip();
     }
 }
