@@ -47,33 +47,22 @@ class GaryTest {
         Gary gary = new Gary(temporaryDirectory.resolve("gary.txt"));
         String separator = System.lineSeparator();
 
-        assertEquals("GARY COMMAND GUIDE" + separator
-                + separator
-                + "TASKS" + separator
-                + "  todo DESCRIPTION" + separator
-                + "    Add a task without a date." + separator
-                + "  deadline DESCRIPTION /by DD-MM-YYYY" + separator
-                + "    Add a task with a deadline." + separator
-                + "  event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY" + separator
-                + "    Add an event spanning two dates." + separator
-                + separator
-                + "TASK MANAGEMENT" + separator
-                + "  list              Show all tasks." + separator
-                + "  mark NUMBER       Mark a task as done." + separator
-                + "  unmark NUMBER     Mark a task as not done." + separator
-                + "  delete NUMBER     Remove a task." + separator
-                + "  find KEYWORD      Find tasks by description." + separator
-                + separator
-                + "CONTACTS" + separator
-                + "  contact add NAME /phone PHONE /email EMAIL" + separator
-                + "    Add a contact." + separator
-                + "  contact list              Show all contacts." + separator
-                + "  contact find KEYWORD      Find contacts." + separator
-                + "  contact delete NUMBER     Remove a contact." + separator
-                + separator
-                + "GENERAL" + separator
-                + "  help              Show this guide." + separator
-                + "  bye               Exit Gary.", gary.getResponse("help"));
+        assertEquals("Here are the available commands:" + separator
+                + "  - list : Views all tasks" + separator
+                + "  - todo <description> : Adds a todo task" + separator
+                + "  - deadline <description> /by <date> : Adds a deadline task" + separator
+                + "  - event <description> /from <start date> /to <end date> : Adds an event task" + separator
+                + "  - mark <index> : Marks a task as completed" + separator
+                + "  - unmark <index> : Marks a task as not completed" + separator
+                + "  - delete <index> : Deletes a task from the list" + separator
+                + "  - find <keyword> : Finds tasks by description" + separator
+                + "  - contact add <name> /phone <phone> /email <email> : Adds a contact" + separator
+                + "  - contact list : Views all contacts" + separator
+                + "  - contact find <keyword> : Finds contacts by name, phone, or email" + separator
+                + "  - contact delete <index> : Deletes a contact" + separator
+                + "  - help : Shows this command guide" + separator
+                + "  - bye : Ends the conversation" + separator
+                + "  - Date format: YYYY-MM-DD (e.g. 2026-09-30)", gary.getResponse("help"));
     }
 
     @Test
@@ -92,12 +81,12 @@ class GaryTest {
         Gary firstGary = new Gary(filePath);
         String separator = System.lineSeparator();
 
-        firstGary.getResponse("deadline return book /by 02-12-2019");
+        firstGary.getResponse("deadline return book /by 2019-12-02");
         firstGary.getResponse("mark 1");
         Gary secondGary = new Gary(filePath);
 
         assertEquals("Here are the tasks in your list:" + separator
-                + "1.[D][X] return book (by: 02-12-2019)", secondGary.getResponse("list"));
+                + "1.[D][X] return book (by: 2019-12-02)", secondGary.getResponse("list"));
     }
 
     @Test

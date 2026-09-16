@@ -57,9 +57,9 @@ class StorageTest {
         assertInstanceOf(Deadline.class, loadedTasks.get(1));
         assertInstanceOf(Event.class, loadedTasks.get(2));
         assertEquals("[T][X] read book", loadedTasks.get(0).toString());
-        assertEquals("[D][ ] return book (by: 02-12-2019)",
+        assertEquals("[D][ ] return book (by: 2019-12-02)",
                 loadedTasks.get(1).toString());
-        assertEquals("[E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)",
+        assertEquals("[E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)",
                 loadedTasks.get(2).toString());
     }
 
@@ -79,7 +79,7 @@ class StorageTest {
 
         assertEquals(2, loadedTasks.size());
         assertEquals("[T][X] read book", loadedTasks.get(0).toString());
-        assertEquals("[E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)",
+        assertEquals("[E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)",
                 loadedTasks.get(1).toString());
     }
 

@@ -16,7 +16,7 @@ import gary.task.Todo;
  */
 public class Parser {
     private static final DateTimeFormatter INPUT_DATE_FORMAT =
-            DateTimeFormatter.ofPattern("dd-MM-uuuu").withResolverStyle(ResolverStyle.STRICT);
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
 
     /**
      * Returns the command type represented by the user input.
@@ -111,7 +111,7 @@ public class Parser {
         }
         if (byIndex == -1) {
             throw new IllegalArgumentException(
-                    "Meow? Use: deadline DESCRIPTION /by DD-MM-YYYY.");
+                    "Meow? Use: deadline DESCRIPTION /by YYYY-MM-DD.");
         }
 
         String description = taskDetails.substring(0, byIndex).trim();
@@ -125,7 +125,7 @@ public class Parser {
 
         LocalDate deadlineDate = parseDate(
                 deadlineDateText,
-                "Error: The deadline date must be in DD-MM-YYYY format");
+                "Error: The deadline date must be in YYYY-MM-DD format");
         return new Deadline(description, deadlineDate);
     }
 
@@ -139,7 +139,7 @@ public class Parser {
         }
         if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
             throw new IllegalArgumentException(
-                    "Meow? Use: event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY.");
+                    "Meow? Use: event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD.");
         }
 
         String description = taskDetails.substring(0, fromIndex).trim();
@@ -147,10 +147,10 @@ public class Parser {
         String endDateText = taskDetails.substring(toIndex + 3).trim();
         if (description.isEmpty() || startDateText.isEmpty() || endDateText.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Meow? Use: event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY.");
+                    "Meow? Use: event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD.");
         }
 
-        String invalidDateMessage = "Error: The event dates must be in DD-MM-YYYY format";
+        String invalidDateMessage = "Error: The event dates must be in YYYY-MM-DD format";
         LocalDate startDate = parseDate(startDateText, invalidDateMessage);
         LocalDate endDate = parseDate(endDateText, invalidDateMessage);
         if (endDate.isBefore(startDate)) {

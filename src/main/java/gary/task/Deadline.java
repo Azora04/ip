@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Deadline extends Task {
     private static final DateTimeFormatter DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern("dd-MM-uuuu");
+            DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     /** Date by which the task must be completed. */
     private final LocalDate by;

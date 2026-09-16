@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern("dd-MM-uuuu");
+            DateTimeFormatter.ofPattern("uuuu-MM-dd");
 
     /** Date on which the event starts. */
     private final LocalDate from;

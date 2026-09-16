@@ -33,9 +33,9 @@ class ParserTest {
         assertInstanceOf(Todo.class,
                 parser.parseTask("todo read book", CommandType.TODO));
         Deadline deadline = assertInstanceOf(Deadline.class,
-                parser.parseTask("deadline return book /by 02-12-2019", CommandType.DEADLINE));
+                parser.parseTask("deadline return book /by 2019-12-02", CommandType.DEADLINE));
         Event event = assertInstanceOf(Event.class,
-                parser.parseTask("event meeting /from 02-12-2019 /to 03-12-2019", CommandType.EVENT));
+                parser.parseTask("event meeting /from 2019-12-02 /to 2019-12-03", CommandType.EVENT));
 
         assertEquals(LocalDate.of(2019, 12, 2), deadline.getBy());
         assertEquals(LocalDate.of(2019, 12, 2), event.getFrom());
@@ -49,17 +49,17 @@ class ParserTest {
                 "deadline report /by tomorrow", CommandType.DEADLINE);
         Executable parseEventWithInvalidDates = () -> parser.parseTask(
                 "event meeting /from Monday /to Tuesday", CommandType.EVENT);
-        Executable parseDeadlineWithIsoDate = () -> parser.parseTask(
-                "deadline report /by 2019-12-02", CommandType.DEADLINE);
+        Executable parseDeadlineWithDayFirstDate = () -> parser.parseTask(
+                "deadline report /by 02-12-2019", CommandType.DEADLINE);
         Executable parseDeadlineWithImpossibleDate = () -> parser.parseTask(
-                "deadline report /by 31-02-2019", CommandType.DEADLINE);
+                "deadline report /by 2019-02-31", CommandType.DEADLINE);
         Executable parseEventWithReversedDates = () -> parser.parseTask(
-                "event trip /from 03-12-2019 /to 02-12-2019", CommandType.EVENT);
+                "event trip /from 2019-12-03 /to 2019-12-02", CommandType.EVENT);
 
         assertThrows(IllegalArgumentException.class, parseTodoWithoutDescription);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithInvalidDate);
         assertThrows(IllegalArgumentException.class, parseEventWithInvalidDates);
-        assertThrows(IllegalArgumentException.class, parseDeadlineWithIsoDate);
+        assertThrows(IllegalArgumentException.class, parseDeadlineWithDayFirstDate);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithImpossibleDate);
         assertThrows(IllegalArgumentException.class, parseEventWithReversedDates);
     }
@@ -67,9 +67,9 @@ class ParserTest {
     @Test
     void parseTask_uppercaseSeparators_returnsMatchingTasks() {
         assertInstanceOf(Deadline.class,
-                parser.parseTask("DEADLINE report /BY 02-12-2019", CommandType.DEADLINE));
+                parser.parseTask("DEADLINE report /BY 2019-12-02", CommandType.DEADLINE));
         assertInstanceOf(Event.class,
-                parser.parseTask("EVENT meeting /FROM 02-12-2019 /TO 03-12-2019", CommandType.EVENT));
+                parser.parseTask("EVENT meeting /FROM 2019-12-02 /TO 2019-12-03", CommandType.EVENT));
     }
 
     @Test

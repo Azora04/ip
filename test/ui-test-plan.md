@@ -4,7 +4,7 @@ The entry point is `gary.Gary`. Each test case runs in a fresh process using Jav
 
 The runner compares the response printed between the two standard divider lines after each command. Line endings and surrounding blank lines are normalized; response text and internal whitespace are otherwise compared exactly. Startup output and all divider lines remain visible in the console-session record.
 
-The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `help`, `todo read book`, `list`, `blah`, and `bye`, and verify that each command appears as a compact right-aligned command chip without a user avatar. Verify that the supplied Gary picture appears in the header and beside Gary's left-aligned responses, the supplied jellyfish scene fills the conversation background beneath a readable tint, the subtitle reads `Your sea-snail task companion`, and Gary uses `Meow` only in his greeting, missing-input guidance, unknown-command response, and farewell. Verify that routine successful commands do not contain `Meow`, the help guide has distinct section headings and monospaced alignment, the unknown command uses the coral warning treatment, and the farewell uses its distinct treatment. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`. Keep the input field focused and use the mouse wheel over the input bar; verify the conversation scrolls without requiring a click in the conversation. Resize the window to its minimum size and then wider than its initial size; verify messages wrap without horizontal scrolling, the background continues to cover the conversation area, the input field expands, the Send button remains usable, and the compact header and input bar remain visible.
+The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `help`, `todo read book`, `list`, `blah`, and `bye`, and verify that each command appears as a compact right-aligned command chip without a user avatar. Verify that the supplied Gary picture appears in the header and beside Gary's left-aligned responses, the supplied jellyfish scene fills the conversation background beneath a readable tint, the subtitle reads `Your sea-snail task companion`, and Gary uses `Meow` only in his greeting, missing-input guidance, unknown-command response, and farewell. Verify that routine successful commands do not contain `Meow`, the help guide has a dash-prefixed command list and monospaced text, the unknown command uses the coral warning treatment, and the farewell uses its distinct treatment. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`. Keep the input field focused and use the mouse wheel over the input bar; verify the conversation scrolls without requiring a click in the conversation. Resize the window to its minimum size and then wider than its initial size; verify messages wrap without horizontal scrolling, the background continues to cover the conversation area, the input field expands, the Send button remains usable, and the compact header and input bar remain visible.
 
 ## UI-01: Task lifecycle
 
@@ -15,8 +15,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 ```json
 [
   "todo read book",
-  "deadline return book /by 02-12-2019",
-  "event project meeting /from 06-08-2019 /to 07-08-2019",
+  "deadline return book /by 2019-12-02",
+  "event project meeting /from 2019-08-06 /to 2019-08-07",
   "mark 2",
   "list",
   "delete 1",
@@ -36,23 +36,23 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   ],
   [
     "Got it. I've added this task:",
-    "  [D][ ] return book (by: 02-12-2019)",
+    "  [D][ ] return book (by: 2019-12-02)",
     "Now you have 2 tasks in the list."
   ],
   [
     "Got it. I've added this task:",
-    "  [E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)",
+    "  [E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)",
     "Now you have 3 tasks in the list."
   ],
   [
     "Nice! I've marked this task as done:",
-    "  [D][X] return book (by: 02-12-2019)"
+    "  [D][X] return book (by: 2019-12-02)"
   ],
   [
     "Here are the tasks in your list:",
     "1.[T][ ] read book",
-    "2.[D][X] return book (by: 02-12-2019)",
-    "3.[E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)"
+    "2.[D][X] return book (by: 2019-12-02)",
+    "3.[E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)"
   ],
   [
     "Noted. I've removed this task:",
@@ -61,8 +61,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   ],
   [
     "Here are the tasks in your list:",
-    "1.[D][X] return book (by: 02-12-2019)",
-    "2.[E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)"
+    "1.[D][X] return book (by: 2019-12-02)",
+    "2.[E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)"
   ],
   "Meow! Sea you again soon!"
 ]
@@ -78,7 +78,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 [
   "todo",
   "deadline submit report /by tomorrow",
-  "event meeting /from 02-12-2019 /to Tuesday",
+  "event meeting /from 2019-12-02 /to Tuesday",
   "delete 1",
   "blah",
   "bye"
@@ -90,8 +90,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 ```json
 [
   "Meow? The description of a todo cannot be empty.",
-  "Error: The deadline date must be in DD-MM-YYYY format",
-  "Error: The event dates must be in DD-MM-YYYY format",
+  "Error: The deadline date must be in YYYY-MM-DD format",
+  "Error: The event dates must be in YYYY-MM-DD format",
   "Error: The task number is invalid",
   "Meow... I don't recognize that command. Type help to see the available commands.",
   "Meow! Sea you again soon!"
@@ -109,8 +109,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 ```json
 [
   "todo read book",
-  "deadline return book /by 02-12-2019",
-  "event project meeting /from 06-08-2019 /to 07-08-2019",
+  "deadline return book /by 2019-12-02",
+  "event project meeting /from 2019-08-06 /to 2019-08-07",
   "mark 2",
   "bye"
 ]
@@ -127,17 +127,17 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   ],
   [
     "Got it. I've added this task:",
-    "  [D][ ] return book (by: 02-12-2019)",
+    "  [D][ ] return book (by: 2019-12-02)",
     "Now you have 2 tasks in the list."
   ],
   [
     "Got it. I've added this task:",
-    "  [E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)",
+    "  [E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)",
     "Now you have 3 tasks in the list."
   ],
   [
     "Nice! I've marked this task as done:",
-    "  [D][X] return book (by: 02-12-2019)"
+    "  [D][X] return book (by: 2019-12-02)"
   ],
   "Meow! Sea you again soon!"
 ]
@@ -166,8 +166,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   [
     "Here are the tasks in your list:",
     "1.[T][ ] read book",
-    "2.[D][X] return book (by: 02-12-2019)",
-    "3.[E][ ] project meeting (from: 06-08-2019 to: 07-08-2019)"
+    "2.[D][X] return book (by: 2019-12-02)",
+    "3.[E][ ] project meeting (from: 2019-08-06 to: 2019-08-07)"
   ],
   [
     "Noted. I've removed this task:",
@@ -187,7 +187,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 ```json
 [
   "todo read book",
-  "deadline return book /by 02-12-2019",
+  "deadline return book /by 2019-12-02",
   "todo buy bread",
   "find BOOK",
   "find",
@@ -206,7 +206,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   ],
   [
     "Got it. I've added this task:",
-    "  [D][ ] return book (by: 02-12-2019)",
+    "  [D][ ] return book (by: 2019-12-02)",
     "Now you have 2 tasks in the list."
   ],
   [
@@ -217,7 +217,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   [
     "Here are the matching tasks in your list:",
     "1.[T][ ] read book",
-    "2.[D][ ] return book (by: 02-12-2019)"
+    "2.[D][ ] return book (by: 2019-12-02)"
   ],
   "Meow? The keyword for a find cannot be empty.",
   "Meow! Sea you again soon!"
@@ -329,33 +329,22 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 ```json
 [
   [
-    "GARY COMMAND GUIDE",
-    "",
-    "TASKS",
-    "  todo DESCRIPTION",
-    "    Add a task without a date.",
-    "  deadline DESCRIPTION /by DD-MM-YYYY",
-    "    Add a task with a deadline.",
-    "  event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY",
-    "    Add an event spanning two dates.",
-    "",
-    "TASK MANAGEMENT",
-    "  list              Show all tasks.",
-    "  mark NUMBER       Mark a task as done.",
-    "  unmark NUMBER     Mark a task as not done.",
-    "  delete NUMBER     Remove a task.",
-    "  find KEYWORD      Find tasks by description.",
-    "",
-    "CONTACTS",
-    "  contact add NAME /phone PHONE /email EMAIL",
-    "    Add a contact.",
-    "  contact list              Show all contacts.",
-    "  contact find KEYWORD      Find contacts.",
-    "  contact delete NUMBER     Remove a contact.",
-    "",
-    "GENERAL",
-    "  help              Show this guide.",
-    "  bye               Exit Gary."
+    "Here are the available commands:",
+    "  - list : Views all tasks",
+    "  - todo <description> : Adds a todo task",
+    "  - deadline <description> /by <date> : Adds a deadline task",
+    "  - event <description> /from <start date> /to <end date> : Adds an event task",
+    "  - mark <index> : Marks a task as completed",
+    "  - unmark <index> : Marks a task as not completed",
+    "  - delete <index> : Deletes a task from the list",
+    "  - find <keyword> : Finds tasks by description",
+    "  - contact add <name> /phone <phone> /email <email> : Adds a contact",
+    "  - contact list : Views all contacts",
+    "  - contact find <keyword> : Finds contacts by name, phone, or email",
+    "  - contact delete <index> : Deletes a contact",
+    "  - help : Shows this command guide",
+    "  - bye : Ends the conversation",
+    "  - Date format: YYYY-MM-DD (e.g. 2026-09-30)"
   ],
   "Meow... I don't recognize that command. Type help to see the available commands.",
   "Meow! Sea you again soon!"
@@ -372,9 +361,9 @@ The JavaFX interface uses the same command-response engine as the terminal inter
 [
   "   LIST   ",
   "ToDo   read instructions",
-  "DEADLINE submit report /BY 31-02-2026",
-  "deadline submit report 31-12-2026",
-  "event trip /FROM 05-01-2027 /TO 04-01-2027",
+  "DEADLINE submit report /BY 2026-02-31",
+  "deadline submit report 2026-12-31",
+  "event trip /FROM 2027-01-05 /TO 2027-01-04",
   "mark one",
   "contact   LIST",
   "contact ADD Alice Tan /PHONE 91234567 /EMAIL alice@example.com",
@@ -394,8 +383,8 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "  [T][ ] read instructions",
     "Now you have 1 tasks in the list."
   ],
-  "Error: The deadline date must be in DD-MM-YYYY format",
-  "Meow? Use: deadline DESCRIPTION /by DD-MM-YYYY.",
+  "Error: The deadline date must be in YYYY-MM-DD format",
+  "Meow? Use: deadline DESCRIPTION /by YYYY-MM-DD.",
   "Error: The event end date cannot be before the start date",
   "Error: The task number is invalid",
   "Your contact list is empty. Add one with contact add.",

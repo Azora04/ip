@@ -14,9 +14,9 @@ class CommandTypeTest {
         assertEquals(CommandType.UNMARK, CommandType.from("unmark 1"));
         assertEquals(CommandType.TODO, CommandType.from("todo read book"));
         assertEquals(CommandType.DEADLINE,
-                CommandType.from("deadline return book /by 02-12-2019"));
+                CommandType.from("deadline return book /by 2019-12-02"));
         assertEquals(CommandType.EVENT,
-                CommandType.from("event meeting /from 02-12-2019 /to 03-12-2019"));
+                CommandType.from("event meeting /from 2019-12-02 /to 2019-12-03"));
         assertEquals(CommandType.DELETE, CommandType.from("delete 1"));
         assertEquals(CommandType.FIND, CommandType.from("find book"));
         assertEquals(CommandType.CONTACT, CommandType.from("contact list"));
