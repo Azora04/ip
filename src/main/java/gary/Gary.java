@@ -99,6 +99,7 @@ public class Gary {
 
         return switch (commandType) {
             case BYE -> ChatResponse.farewell("Bye. Hope to see you again soon!");
+            case HELP -> getHelpResponse();
             case LIST -> getTaskListResponse();
             case MARK -> markTask(command);
             case UNMARK -> unmarkTask(command);
@@ -108,6 +109,37 @@ public class Gary {
             case CONTACT -> handleContactCommand(command);
             case UNKNOWN -> ChatResponse.error("Invalid command");
         };
+    }
+
+    private ChatResponse getHelpResponse() {
+        return ChatResponse.help(formatResponse(
+                "GARY COMMAND GUIDE",
+                "",
+                "TASKS",
+                "  todo DESCRIPTION",
+                "    Add a task without a date.",
+                "  deadline DESCRIPTION /by DD-MM-YYYY",
+                "    Add a task with a deadline.",
+                "  event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY",
+                "    Add an event spanning two dates.",
+                "",
+                "TASK MANAGEMENT",
+                "  list              Show all tasks.",
+                "  mark NUMBER       Mark a task as done.",
+                "  unmark NUMBER     Mark a task as not done.",
+                "  delete NUMBER     Remove a task.",
+                "  find KEYWORD      Find tasks by description.",
+                "",
+                "CONTACTS",
+                "  contact add NAME /phone PHONE /email EMAIL",
+                "    Add a contact.",
+                "  contact list              Show all contacts.",
+                "  contact find KEYWORD      Find contacts.",
+                "  contact delete NUMBER     Remove a contact.",
+                "",
+                "GENERAL",
+                "  help              Show this guide.",
+                "  bye               Exit Gary."));
     }
 
     private ChatResponse handleContactCommand(String command) {

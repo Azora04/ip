@@ -6,6 +6,8 @@ package gary.ui;
 public enum ResponseType {
     /** A successful response containing information or confirmation. */
     NORMAL,
+    /** A command guide that benefits from expanded, structured presentation. */
+    HELP,
     /** A response that explains invalid input or an unsuccessful operation. */
     ERROR,
     /** The final response shown when the user exits. */

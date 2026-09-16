@@ -1,7 +1,9 @@
 package gary.command;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 import gary.task.Deadline;
 import gary.task.Event;
@@ -12,6 +14,9 @@ import gary.task.Todo;
  * Parses user input into commands and command arguments.
  */
 public class Parser {
+    private static final DateTimeFormatter INPUT_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("dd-MM-uuuu").withResolverStyle(ResolverStyle.STRICT);
+
     /**
      * Returns the command type represented by the user input.
      *
@@ -23,6 +28,9 @@ public class Parser {
 
         CommandType commandType = CommandType.from(input);
         if (commandType == CommandType.BYE && !input.equals("bye")) {
+            return CommandType.UNKNOWN;
+        }
+        if (commandType == CommandType.HELP && !input.equals("help")) {
             return CommandType.UNKNOWN;
         }
         if (commandType == CommandType.LIST && !input.equals("list")) {
@@ -117,7 +125,7 @@ public class Parser {
 
         LocalDate deadlineDate = parseDate(
                 deadlineDateText,
-                "Error: The deadline date must be in yyyy-MM-dd format");
+                "Error: The deadline date must be in DD-MM-YYYY format");
         return new Deadline(description, deadlineDate);
     }
 
@@ -139,7 +147,7 @@ public class Parser {
             throw new IllegalArgumentException("Error: The event format is invalid");
         }
 
-        String invalidDateMessage = "Error: The event dates must be in yyyy-MM-dd format";
+        String invalidDateMessage = "Error: The event dates must be in DD-MM-YYYY format";
         LocalDate startDate = parseDate(startDateText, invalidDateMessage);
         LocalDate endDate = parseDate(endDateText, invalidDateMessage);
         return new Event(description, startDate, endDate);
@@ -147,7 +155,7 @@ public class Parser {
 
     private LocalDate parseDate(String dateText, String invalidDateMessage) {
         try {
-            return LocalDate.parse(dateText);
+            return LocalDate.parse(dateText, INPUT_DATE_FORMAT);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(invalidDateMessage);
         }

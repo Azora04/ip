@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -15,13 +17,23 @@ class ParserTest {
     private final Parser parser = new Parser();
 
     @Test
+    void parseCommandType_helpWithAndWithoutArguments_returnsHelpOrUnknown() {
+        assertEquals(CommandType.HELP, parser.parseCommandType("help"));
+        assertEquals(CommandType.UNKNOWN, parser.parseCommandType("help extra"));
+    }
+
+    @Test
     void parseTask_supportedTypes_returnsMatchingTasks() {
         assertInstanceOf(Todo.class,
                 parser.parseTask("todo read book", CommandType.TODO));
-        assertInstanceOf(Deadline.class,
-                parser.parseTask("deadline return book /by 2019-12-02", CommandType.DEADLINE));
-        assertInstanceOf(Event.class,
-                parser.parseTask("event meeting /from 2019-12-02 /to 2019-12-03", CommandType.EVENT));
+        Deadline deadline = assertInstanceOf(Deadline.class,
+                parser.parseTask("deadline return book /by 02-12-2019", CommandType.DEADLINE));
+        Event event = assertInstanceOf(Event.class,
+                parser.parseTask("event meeting /from 02-12-2019 /to 03-12-2019", CommandType.EVENT));
+
+        assertEquals(LocalDate.of(2019, 12, 2), deadline.getBy());
+        assertEquals(LocalDate.of(2019, 12, 2), event.getFrom());
+        assertEquals(LocalDate.of(2019, 12, 3), event.getTo());
     }
 
     @Test
@@ -31,10 +43,16 @@ class ParserTest {
                 "deadline report /by tomorrow", CommandType.DEADLINE);
         Executable parseEventWithInvalidDates = () -> parser.parseTask(
                 "event meeting /from Monday /to Tuesday", CommandType.EVENT);
+        Executable parseDeadlineWithIsoDate = () -> parser.parseTask(
+                "deadline report /by 2019-12-02", CommandType.DEADLINE);
+        Executable parseDeadlineWithImpossibleDate = () -> parser.parseTask(
+                "deadline report /by 31-02-2019", CommandType.DEADLINE);
 
         assertThrows(IllegalArgumentException.class, parseTodoWithoutDescription);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithInvalidDate);
         assertThrows(IllegalArgumentException.class, parseEventWithInvalidDates);
+        assertThrows(IllegalArgumentException.class, parseDeadlineWithIsoDate);
+        assertThrows(IllegalArgumentException.class, parseDeadlineWithImpossibleDate);
     }
 
     @Test

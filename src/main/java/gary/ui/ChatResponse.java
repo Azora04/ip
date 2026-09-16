@@ -26,6 +26,16 @@ public record ChatResponse(String message, ResponseType type) {
     }
 
     /**
+     * Returns a command-guide response.
+     *
+     * @param message Command guide to display.
+     * @return Help response containing the guide.
+     */
+    public static ChatResponse help(String message) {
+        return new ChatResponse(message, ResponseType.HELP);
+    }
+
+    /**
      * Returns an error response.
      *
      * @param message Error text to display.

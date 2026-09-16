@@ -6,6 +6,8 @@ package gary.command;
 public enum CommandType {
     /** Ends the application. */
     BYE("bye"),
+    /** Displays the command guide. */
+    HELP("help"),
     /** Displays all tasks. */
     LIST("list"),
     /** Marks a task as done. */

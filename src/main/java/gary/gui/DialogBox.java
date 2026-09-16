@@ -15,20 +15,22 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 /**
  * Displays one message and identifies its speaker.
  */
 public class DialogBox extends HBox {
     private static final double GARY_MESSAGE_WIDTH_RATIO = 0.82;
+    private static final double HELP_MESSAGE_WIDTH_RATIO = 0.94;
     private static final double USER_MESSAGE_WIDTH_RATIO = 0.72;
 
     @FXML
-    private Label avatar;
+    private StackPane avatarFrame;
     @FXML
     private Label dialog;
 
-    private DialogBox(String text, String avatarText) {
+    private DialogBox(String text) {
         URL view = Objects.requireNonNull(
                 DialogBox.class.getResource("/view/DialogBox.fxml"),
                 "DialogBox.fxml is missing");
@@ -42,7 +44,6 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
-        avatar.setText(avatarText);
     }
 
     /**
@@ -52,10 +53,10 @@ public class DialogBox extends HBox {
      * @return User dialog box.
      */
     public static DialogBox getUserDialog(String text) {
-        DialogBox dialogBox = new DialogBox(text, "");
+        DialogBox dialogBox = new DialogBox(text);
         dialogBox.getStyleClass().add("user-dialog");
-        dialogBox.avatar.setManaged(false);
-        dialogBox.avatar.setVisible(false);
+        dialogBox.avatarFrame.setManaged(false);
+        dialogBox.avatarFrame.setVisible(false);
         dialogBox.bindMessageWidth(USER_MESSAGE_WIDTH_RATIO);
         return dialogBox;
     }
@@ -70,14 +71,19 @@ public class DialogBox extends HBox {
         String message = response.type() == ResponseType.ERROR
                 ? "⚠  " + response.message()
                 : response.message();
-        DialogBox dialogBox = new DialogBox(message, "🐌");
+        DialogBox dialogBox = new DialogBox(message);
         dialogBox.getStyleClass().add("gary-dialog");
         if (response.type() == ResponseType.ERROR) {
             dialogBox.getStyleClass().add("error-dialog");
         } else if (response.type() == ResponseType.FAREWELL) {
             dialogBox.getStyleClass().add("farewell-dialog");
+        } else if (response.type() == ResponseType.HELP) {
+            dialogBox.getStyleClass().add("help-dialog");
         }
-        dialogBox.bindMessageWidth(GARY_MESSAGE_WIDTH_RATIO);
+        double widthRatio = response.type() == ResponseType.HELP
+                ? HELP_MESSAGE_WIDTH_RATIO
+                : GARY_MESSAGE_WIDTH_RATIO;
+        dialogBox.bindMessageWidth(widthRatio);
         dialogBox.flip();
         return dialogBox;
     }

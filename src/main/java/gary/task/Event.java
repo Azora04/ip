@@ -2,14 +2,13 @@ package gary.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 /**
  * Represents a task that takes place between two dates.
  */
 public class Event extends Task {
     private static final DateTimeFormatter DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
+            DateTimeFormatter.ofPattern("dd-MM-uuuu");
 
     /** Date on which the event starts. */
     private final LocalDate from;

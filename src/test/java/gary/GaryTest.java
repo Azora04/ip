@@ -42,10 +42,45 @@ class GaryTest {
     }
 
     @Test
+    void getResponse_helpCommand_returnsCommandGuide() {
+        Gary gary = new Gary(temporaryDirectory.resolve("gary.txt"));
+        String separator = System.lineSeparator();
+
+        assertEquals("GARY COMMAND GUIDE" + separator
+                + separator
+                + "TASKS" + separator
+                + "  todo DESCRIPTION" + separator
+                + "    Add a task without a date." + separator
+                + "  deadline DESCRIPTION /by DD-MM-YYYY" + separator
+                + "    Add a task with a deadline." + separator
+                + "  event DESCRIPTION /from DD-MM-YYYY /to DD-MM-YYYY" + separator
+                + "    Add an event spanning two dates." + separator
+                + separator
+                + "TASK MANAGEMENT" + separator
+                + "  list              Show all tasks." + separator
+                + "  mark NUMBER       Mark a task as done." + separator
+                + "  unmark NUMBER     Mark a task as not done." + separator
+                + "  delete NUMBER     Remove a task." + separator
+                + "  find KEYWORD      Find tasks by description." + separator
+                + separator
+                + "CONTACTS" + separator
+                + "  contact add NAME /phone PHONE /email EMAIL" + separator
+                + "    Add a contact." + separator
+                + "  contact list              Show all contacts." + separator
+                + "  contact find KEYWORD      Find contacts." + separator
+                + "  contact delete NUMBER     Remove a contact." + separator
+                + separator
+                + "GENERAL" + separator
+                + "  help              Show this guide." + separator
+                + "  bye               Exit Gary.", gary.getResponse("help"));
+    }
+
+    @Test
     void getChatResponse_normalErrorAndFarewellCommands_returnsPresentationTypes() {
         Gary gary = new Gary(temporaryDirectory.resolve("gary.txt"));
 
         assertEquals(ResponseType.NORMAL, gary.getChatResponse("todo read book").type());
+        assertEquals(ResponseType.HELP, gary.getChatResponse("help").type());
         assertEquals(ResponseType.ERROR, gary.getChatResponse("unknown").type());
         assertEquals(ResponseType.FAREWELL, gary.getChatResponse("bye").type());
     }
@@ -56,12 +91,12 @@ class GaryTest {
         Gary firstGary = new Gary(filePath);
         String separator = System.lineSeparator();
 
-        firstGary.getResponse("deadline return book /by 2019-12-02");
+        firstGary.getResponse("deadline return book /by 02-12-2019");
         firstGary.getResponse("mark 1");
         Gary secondGary = new Gary(filePath);
 
         assertEquals("Here are the tasks in your list:" + separator
-                + "1.[D][X] return book (by: Dec 2 2019)", secondGary.getResponse("list"));
+                + "1.[D][X] return book (by: 02-12-2019)", secondGary.getResponse("list"));
     }
 
     @Test
