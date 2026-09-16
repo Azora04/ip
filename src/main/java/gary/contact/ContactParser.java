@@ -76,7 +76,7 @@ public class ContactParser {
     public String parseKeyword(String input) throws IllegalArgumentException {
         String keyword = getActionArguments(input);
         if (keyword.isEmpty()) {
-            throw new IllegalArgumentException("Error: The contact keyword cannot be empty");
+            throw new IllegalArgumentException("Meow? The contact keyword cannot be empty.");
         }
         return keyword;
     }

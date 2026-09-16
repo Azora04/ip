@@ -39,7 +39,7 @@
                     <children>
                         <Label styleClass="title" text="GARY" />
                         <Label styleClass="subtitle"
-                               text="Your task &amp; contact companion" />
+                               text="Your sea-snail task companion" />
                     </children>
                 </VBox>
             </children>

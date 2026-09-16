@@ -36,9 +36,10 @@ class GaryTest {
     void getResponse_invalidAndExitCommands_returnsMessages() {
         Gary gary = new Gary(temporaryDirectory.resolve("gary.txt"));
 
-        assertEquals("Error: The description of a todo cannot be empty", gary.getResponse("todo"));
-        assertEquals("Invalid command", gary.getResponse("blah"));
-        assertEquals("Bye. Hope to see you again soon!", gary.getResponse("bye"));
+        assertEquals("Meow? The description of a todo cannot be empty.", gary.getResponse("todo"));
+        assertEquals("Meow... I don't recognize that command. Type help to see the available commands.",
+                gary.getResponse("blah"));
+        assertEquals("Meow! Sea you again soon!", gary.getResponse("bye"));
     }
 
     @Test

@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
  * Controls the main Gary chatbot window.
  */
 public class MainWindow {
-    private static final String WELCOME_MESSAGE = "Hello! I'm Gary.\nWhat can I do for you?";
+    private static final String WELCOME_MESSAGE = "Meow! I'm Gary.\nWhat can I do for you?";
 
     @FXML
     private VBox dialogContainer;
