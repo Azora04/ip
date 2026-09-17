@@ -55,6 +55,12 @@ class ParserTest {
                 "deadline report /by 2019-02-31", CommandType.DEADLINE);
         Executable parseEventWithReversedDates = () -> parser.parseTask(
                 "event trip /from 2019-12-03 /to 2019-12-02", CommandType.EVENT);
+        Executable parseTodoWithStorageDelimiter = () -> parser.parseTask(
+                "todo compare red | blue", CommandType.TODO);
+        Executable parseDeadlineWithStorageDelimiter = () -> parser.parseTask(
+                "deadline compare red | blue /by 2019-12-02", CommandType.DEADLINE);
+        Executable parseEventWithStorageDelimiter = () -> parser.parseTask(
+                "event compare red | blue /from 2019-12-02 /to 2019-12-03", CommandType.EVENT);
 
         assertThrows(IllegalArgumentException.class, parseTodoWithoutDescription);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithInvalidDate);
@@ -62,6 +68,9 @@ class ParserTest {
         assertThrows(IllegalArgumentException.class, parseDeadlineWithDayFirstDate);
         assertThrows(IllegalArgumentException.class, parseDeadlineWithImpossibleDate);
         assertThrows(IllegalArgumentException.class, parseEventWithReversedDates);
+        assertThrows(IllegalArgumentException.class, parseTodoWithStorageDelimiter);
+        assertThrows(IllegalArgumentException.class, parseDeadlineWithStorageDelimiter);
+        assertThrows(IllegalArgumentException.class, parseEventWithStorageDelimiter);
     }
 
     @Test

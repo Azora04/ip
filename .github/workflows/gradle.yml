@@ -22,4 +22,11 @@ jobs:
           java-version: 25
           java-package: jdk+fx
       - name: Build and check with Gradle
-        run: ./gradlew check
+        run: ./gradlew clean check shadowJar
+      - name: Upload executable JAR
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: gary-jar
+          path: build/libs/gary.jar
+          if-no-files-found: error
