@@ -3,6 +3,8 @@
 Gary is your sea-snail task companion. Manage tasks, deadlines, events,
 and contacts in one desktop chat window.
 
+<img width="924" height="800" alt="image" src="https://github.com/user-attachments/assets/2bcc3cef-5423-4435-8077-f1e23f81679e" />
+
 [Quick Start](#quick-start) · [Available Commands](#available-commands) ·
 [Viewing Help](#viewing-help) · [Tasks](#tasks) · [Contacts](#contacts) · [Goodbye](#goodbye) ·
 [Saving your data](#saving-your-data) · [Troubleshooting](#troubleshooting)
