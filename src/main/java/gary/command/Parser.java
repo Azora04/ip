@@ -15,6 +15,7 @@ import gary.task.Todo;
  * Parses user input into commands and command arguments.
  */
 public class Parser {
+    private static final String STORAGE_DELIMITER = " | ";
     private static final DateTimeFormatter INPUT_DATE_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
 
@@ -99,6 +100,7 @@ public class Parser {
         if (description.isEmpty()) {
             throw new IllegalArgumentException("Meow? The description of a todo cannot be empty.");
         }
+        validateDescription(description);
         return new Todo(description);
     }
 
@@ -119,6 +121,7 @@ public class Parser {
         if (description.isEmpty()) {
             throw new IllegalArgumentException("Meow? The description of a deadline cannot be empty.");
         }
+        validateDescription(description);
         if (deadlineDateText.isEmpty()) {
             throw new IllegalArgumentException("Meow? The deadline date cannot be empty.");
         }
@@ -149,6 +152,7 @@ public class Parser {
             throw new IllegalArgumentException(
                     "Meow? Use: event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD.");
         }
+        validateDescription(description);
 
         String invalidDateMessage = "Error: The event dates must be in YYYY-MM-DD format";
         LocalDate startDate = parseDate(startDateText, invalidDateMessage);
@@ -165,6 +169,12 @@ public class Parser {
             return LocalDate.parse(dateText, INPUT_DATE_FORMAT);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(invalidDateMessage);
+        }
+    }
+
+    private void validateDescription(String description) {
+        if (description.contains(STORAGE_DELIMITER)) {
+            throw new IllegalArgumentException("Meow? Task descriptions cannot contain \" | \".");
         }
     }
 

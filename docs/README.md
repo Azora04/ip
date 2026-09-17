@@ -195,8 +195,9 @@ the next time you start it from that folder.
   files when you add data.
 - To move Gary, copy the JAR **and the `data` folder**.
 - Back up the `data` folder before editing or replacing its files.
-- Avoid a vertical bar (`|`) surrounded by spaces in descriptions and contact fields. Avoid editing
-  data files while Gary is running; malformed records may be skipped on loading.
+- Gary rejects descriptions and contact fields containing a vertical bar (`|`) surrounded by spaces,
+  because that sequence separates fields in the data files. Avoid editing data files while Gary is
+  running; malformed records may be skipped on loading.
 
 > If Gary cannot save, your latest changes may exist only in the current session.
 > Keep a copy of the details and resolve the folder access problem before closing.

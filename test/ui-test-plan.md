@@ -4,7 +4,7 @@ The entry point is `gary.Gary`. Each test case runs in a fresh process using Jav
 
 The runner compares the response printed between the two standard divider lines after each command. Line endings and surrounding blank lines are normalized; response text and internal whitespace are otherwise compared exactly. Startup output and all divider lines remain visible in the console-session record.
 
-The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `help`, `todo read book`, `list`, `blah`, and `bye`, and verify that each command appears as a compact right-aligned command chip without a user avatar. Verify that the supplied Gary picture appears in the header and beside Gary's left-aligned responses, the supplied jellyfish scene fills the conversation background beneath a readable tint, the subtitle reads `Your sea-snail task companion`, and Gary uses `Meow` only in his greeting, missing-input guidance, unknown-command response, and farewell. Verify that routine successful commands do not contain `Meow`, the help guide has a dash-prefixed command list and monospaced text, the unknown command uses the coral warning treatment, and the farewell uses its distinct treatment. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands, the conversation scrolls to the latest dialog, and input is disabled after `bye`. Keep the input field focused and use the mouse wheel over the input bar; verify the conversation scrolls without requiring a click in the conversation. Resize the window to its minimum size and then wider than its initial size; verify messages wrap without horizontal scrolling, the background continues to cover the conversation area, the input field expands, the Send button remains usable, and the compact header and input bar remain visible.
+The JavaFX interface uses the same command-response engine as the terminal interface. After GUI changes, also launch `gary.gui.Launcher`, enter `help`, `todo read book`, `list`, and `blah`, and verify that each command appears as a compact right-aligned command chip without a user avatar. Verify that the supplied Gary picture appears in the header and beside Gary's left-aligned responses, the supplied jellyfish scene fills the conversation background beneath a readable tint, the subtitle reads `Your sea-snail task companion`, and Gary uses `Meow` only in his greeting, missing-input guidance, unknown-command response, and farewell. Verify that routine successful commands do not contain `Meow`, the help guide has a dash-prefixed command list and monospaced text, the unknown command uses the coral warning treatment, and the farewell uses its distinct treatment. For contact changes, repeat the UI-05A commands through the GUI and verify the title identifies Gary as a task and contact assistant. Verify both the Send button and Enter key submit commands and the conversation scrolls to the latest dialog. Keep the input field focused and use the mouse wheel over the input bar; verify the conversation scrolls without requiring a click in the conversation. Resize the window to its minimum size and then wider than its initial size; verify messages wrap without horizontal scrolling, the background continues to cover the conversation area, the input field expands, the Send button remains usable, and the compact header and input bar remain visible. Finally, enter `bye` and verify the controls become disabled, the farewell appears briefly, and the window closes automatically. Relaunch the GUI, enter uppercase `BYE`, and verify it follows the same shutdown behavior.
 
 ## UI-01: Task lifecycle
 
@@ -362,6 +362,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
   "   LIST   ",
   "ToDo   read instructions",
   "DEADLINE submit report /BY 2026-02-31",
+  "todo compare red | blue",
   "deadline submit report 2026-12-31",
   "event trip /FROM 2027-01-05 /TO 2027-01-04",
   "mark one",
@@ -384,6 +385,7 @@ The JavaFX interface uses the same command-response engine as the terminal inter
     "Now you have 1 tasks in the list."
   ],
   "Error: The deadline date must be in YYYY-MM-DD format",
+  "Meow? Task descriptions cannot contain \" | \".",
   "Meow? Use: deadline DESCRIPTION /by YYYY-MM-DD.",
   "Error: The event end date cannot be before the start date",
   "Error: The task number is invalid",
