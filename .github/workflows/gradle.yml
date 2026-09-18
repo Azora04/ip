@@ -19,8 +19,8 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: zulu
-          java-version: 25
-          java-package: jdk+fx
+          java-version: 25.0.3
+          java-package: jdk
       - name: Build and check with Gradle
         run: ./gradlew clean check shadowJar
       - name: Upload executable JAR
@@ -30,3 +30,24 @@ jobs:
           name: gary-jar
           path: build/libs/gary.jar
           if-no-files-found: error
+
+  release-smoke:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 25.0.3
+          java-package: jdk
+      - uses: actions/download-artifact@v8
+        with:
+          name: gary-jar
+          path: release
+      - name: Test the same release JAR on Java 25.0.3
+        run: python test/run_jar_smoke.py release/gary.jar

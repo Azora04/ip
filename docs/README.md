@@ -25,6 +25,11 @@ and contacts in one desktop chat window.
    java -jar "gary.jar"
    ```
 
+On macOS, use the terminal command above. Double-clicking a JAR may use a different
+Java installation and only show a generic Console error. Check `java -version`
+in that same terminal. Releases from v0.3 include both Intel and Apple Silicon
+Mac libraries, as well as Windows x64 libraries, and are tested with Java 25.0.3.
+
 Older releases may not include every feature in this guide. To build the current
 version, download or clone the [repository](https://github.com/Azora04/ip), open a
 terminal in the project folder, and run `gradlew.bat shadowJar` on Windows or
