@@ -1,6 +1,5 @@
 """Launch the actual release JAR in an empty folder and drive its JavaFX controls."""
 import pathlib
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -26,18 +25,6 @@ with tempfile.TemporaryDirectory(prefix="gary-jar-test-") as temporary:
         print(result.stdout, result.stderr, flush=True)
         print("JAVA_EXIT_CODE", result.returncode, flush=True)
         if result.returncode or "SMOKE_GUI_PASS" not in result.stdout:
-            if sys.platform == "darwin":
-                subprocess.run([
-                    "lldb", "--batch", "-o", "process handle SIGSEGV -s false -n false -p true",
-                    "-o", "process handle SIGBUS -s false -n false -p true",
-                    "-o", "run", "-k", "thread backtrace all", "--",
-                    shutil.which("java"), f"-javaagent:{agent}={farewell}", "-jar", str(jar),
-                ], cwd=session, timeout=60)
-            reports = pathlib.Path.home() / "Library" / "Logs" / "DiagnosticReports"
-            if reports.is_dir():
-                crashes = sorted(reports.glob("java*"), key=lambda path: path.stat().st_mtime, reverse=True)
-                for crash in crashes[:1]:
-                    print(crash.read_text(errors="replace")[:24000], flush=True)
             raise SystemExit("Release JAR GUI smoke test failed")
         print("SMOKE_PROCESS_EXITED_SUCCESSFULLY", farewell, flush=True)
         if "release smoke test" not in (session / "data" / "gary.txt").read_text():
