@@ -1,7 +1,9 @@
 package gary.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,5 +19,13 @@ class MacNativeLibrariesTest {
     @Test
     void resourceDirectory_unsupportedArchitecture_rejectsInsteadOfLoadingWrongLibraries() {
         assertThrows(IllegalArgumentException.class, () -> MacNativeLibraries.resourceDirectory("riscv64"));
+    }
+
+    @Test
+    void requiresSoftwareRenderer_intelMac_usesStableRendererFallback() {
+        assertTrue(MacNativeLibraries.requiresSoftwareRenderer("x86_64"));
+        assertTrue(MacNativeLibraries.requiresSoftwareRenderer("AMD64"));
+        assertFalse(MacNativeLibraries.requiresSoftwareRenderer("aarch64"));
+        assertFalse(MacNativeLibraries.requiresSoftwareRenderer("arm64"));
     }
 }

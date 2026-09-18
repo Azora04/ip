@@ -23,7 +23,11 @@ public final class MacNativeLibraries {
         if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("mac")) {
             return;
         }
-        String resourceDirectory = resourceDirectory(System.getProperty("os.arch"));
+        String architecture = System.getProperty("os.arch");
+        if (requiresSoftwareRenderer(architecture) && System.getProperty("prism.order") == null) {
+            System.setProperty("prism.order", "sw");
+        }
+        String resourceDirectory = resourceDirectory(architecture);
         try (InputStream index = MacNativeLibraries.class.getResourceAsStream(resourceDirectory + "libraries.txt")) {
             if (index == null) {
                 throw new IOException("Missing bundled Mac JavaFX libraries: " + resourceDirectory);
@@ -44,6 +48,13 @@ public final class MacNativeLibraries {
             case "aarch64", "arm64" -> "/natives/mac-aarch64/";
             case "x86_64", "amd64" -> "/natives/mac-x86_64/";
             default -> throw new IllegalArgumentException("Unsupported Mac JVM architecture: " + architecture);
+        };
+    }
+
+    static boolean requiresSoftwareRenderer(String architecture) {
+        return switch (architecture.toLowerCase(Locale.ROOT)) {
+            case "x86_64", "amd64" -> true;
+            default -> false;
         };
     }
 
