@@ -23,6 +23,7 @@ with tempfile.TemporaryDirectory(prefix="gary-jar-test-") as temporary:
             cwd=session, capture_output=True, text=True, timeout=45,
         )
         print(result.stdout, result.stderr, flush=True)
+        print("JAVA_EXIT_CODE", result.returncode, flush=True)
         if result.returncode or "SMOKE_GUI_PASS" not in result.stdout:
             raise SystemExit("Release JAR GUI smoke test failed")
         print("SMOKE_PROCESS_EXITED_SUCCESSFULLY", farewell, flush=True)
