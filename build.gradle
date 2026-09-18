@@ -18,9 +18,17 @@ checkstyle {
     toolVersion = '14.1.0'
 }
 
+configurations {
+    macIntelNatives
+    macArmNatives
+}
+
 dependencies {
-    String javaFxVersion = '25.0.2'
+    String javaFxVersion = '25.0.3'
     String jUnitVersion = '5.14.4'
+
+    macIntelNatives("org.openjfx:javafx-graphics:${javaFxVersion}:mac") { transitive = false }
+    macArmNatives("org.openjfx:javafx-graphics:${javaFxVersion}:mac-aarch64") { transitive = false }
 
     implementation "org.openjfx:javafx-base:${javaFxVersion}:win"
     implementation "org.openjfx:javafx-base:${javaFxVersion}:mac"
@@ -69,10 +77,36 @@ jar {
 
 shadowJar {
     archiveFileName = 'gary.jar'
+    eachFile {
+        if (!path.contains('/') && name.endsWith('.dylib')) {
+            exclude()
+        }
+    }
     manifest {
         attributes 'Enable-Native-Access': 'ALL-UNNAMED'
     }
 }
+
+tasks.register('prepareMacNatives') {
+    inputs.files(configurations.macIntelNatives, configurations.macArmNatives)
+    def outputDir = layout.buildDirectory.dir('generated/mac-natives')
+    outputs.dir(outputDir)
+    doLast {
+        [ 'x86_64': configurations.macIntelNatives, 'aarch64': configurations.macArmNatives ].each { arch, jars ->
+            def destination = outputDir.get().dir("natives/mac-${arch}").asFile
+            copy {
+                from jars.collect { zipTree(it) }
+                include '*.dylib'
+                into destination
+            }
+            new File(destination, 'libraries.txt').text = destination.listFiles()
+                    .findAll { it.name.endsWith('.dylib') }.collect { it.name }.sort().join('\n') + '\n'
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir(layout.buildDirectory.dir('generated/mac-natives'))
+processResources.dependsOn tasks.named('prepareMacNatives')
 
 run {
     standardInput = System.in

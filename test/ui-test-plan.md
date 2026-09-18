@@ -1,5 +1,12 @@
 # UI Test Plan
 
+Release packaging check: run `python test/run_jar_smoke.py build/libs/gary.jar`
+with a plain Java 25.0.3 JDK on Windows x64, Intel macOS, and Apple Silicon macOS.
+The test launches the actual JAR in fresh working folders, adds and lists a task,
+checks persistence, and verifies that `bye` and `BYE` close the window.
+Expected markers: `SMOKE_GUI_PASS`, `SMOKE_PROCESS_EXITED_SUCCESSFULLY`, and
+`All release JAR smoke tests passed`. Stop and report any failed launch or timeout.
+
 The entry point is `gary.Gary`. Each test case runs in a fresh process using Java 25. `Inputs` and `Expected outputs` are parallel JSON lists with one expected response per command. An expected response can be a string or a list of output lines. Test cases are isolated unless they specify the same `Storage group`, in which case their processes share one temporary working directory.
 
 The runner compares the response printed between the two standard divider lines after each command. Line endings and surrounding blank lines are normalized; response text and internal whitespace are otherwise compared exactly. Startup output and all divider lines remain visible in the console-session record.
