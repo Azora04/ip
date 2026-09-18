@@ -28,7 +28,9 @@ with tempfile.TemporaryDirectory(prefix="gary-jar-test-") as temporary:
         if result.returncode or "SMOKE_GUI_PASS" not in result.stdout:
             if sys.platform == "darwin":
                 subprocess.run([
-                    "lldb", "--batch", "-o", "run", "-o", "thread backtrace all", "--",
+                    "lldb", "--batch", "-o", "process handle SIGSEGV -s false -n false -p true",
+                    "-o", "process handle SIGBUS -s false -n false -p true",
+                    "-o", "run", "-k", "thread backtrace all", "--",
                     shutil.which("java"), f"-javaagent:{agent}={farewell}", "-jar", str(jar),
                 ], cwd=session, timeout=60)
             reports = pathlib.Path.home() / "Library" / "Logs" / "DiagnosticReports"
