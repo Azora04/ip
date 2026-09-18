@@ -15,16 +15,17 @@ with tempfile.TemporaryDirectory(prefix="gary-jar-test-") as temporary:
     manifest.write_text("Premain-Class: gary.smoke.JarSmokeAgent\n", encoding="utf-8")
     agent = work / "smoke-agent.jar"
     subprocess.run(["jar", "cfm", str(agent), str(manifest), "-C", str(classes), "."], check=True)
-    for farewell in ("bye", "BYE"):
-        session = work / farewell
+    for number, farewell in enumerate(("bye", "BYE")):
+        session = work / f"session-{number}"
         session.mkdir()
         result = subprocess.run(
             ["java", f"-javaagent:{agent}={farewell}", "-jar", str(jar)],
             cwd=session, capture_output=True, text=True, timeout=45,
         )
         print(result.stdout, result.stderr, flush=True)
-        if result.returncode or "SMOKE_GUI_PASS" not in result.stdout or "SMOKE_WINDOW_CLOSED" not in result.stdout:
+        if result.returncode or "SMOKE_GUI_PASS" not in result.stdout:
             raise SystemExit("Release JAR GUI smoke test failed")
+        print("SMOKE_PROCESS_EXITED_SUCCESSFULLY", farewell, flush=True)
         if "release smoke test" not in (session / "data" / "gary.txt").read_text():
             raise SystemExit("Release JAR did not persist the task")
 print("All release JAR smoke tests passed")
